@@ -13,6 +13,7 @@ test("App should have correct initial render", () => {
   expect(screen.getByLabelText("Set increment amount")).toHaveValue(2)
 })
 
+
 test("Increment value and Decrement value should work as expected", async () => {
   const { user } = renderWithProviders(<App />)
 
