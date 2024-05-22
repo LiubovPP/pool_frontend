@@ -16,11 +16,25 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const error = useSelector((state: RootState) => state.auth.error);
 
   const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      alert('Пароли не совпадают');
+      return;
+    }
+
     await dispatch(registerUser({ firstName, lastName, email, password, phoneNumber, role: 'USER' } as User));
+    
+    // Очистка полей после успешной регистрации
+    setFirstName('');
+    setLastName('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setPhoneNumber('');
     onClose();
   };
 
@@ -34,6 +48,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
       <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Фамилия" />
       <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
       <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Пароль" />
+      <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Подтвердите пароль" />
       <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="Телефон" />
       <button onClick={handleRegister}>Регистрация</button>
       <button onClick={onClose}>Закрыть</button>
