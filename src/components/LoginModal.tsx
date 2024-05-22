@@ -17,8 +17,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) 
   const error = useSelector((state: RootState) => state.auth.error);
 
   const handleLogin = async () => {
-    await dispatch(loginUser({ username, password }));
-    onClose();
+    try {
+      await dispatch(loginUser({ username, password })).unwrap();
+      onClose();
+    } catch (error) {
+      console.error('Ошибка входа', error);
+    }
   };
 
   if (!isOpen) return null;

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { User } from '@app/types';
+import { User, UserRole } from '@app/types';
 
 interface AuthState {
   user: User | null;
@@ -11,7 +11,7 @@ interface AuthState {
 const getUserFromLocalStorage = (): User | null => {
   try {
     const userData = localStorage.getItem('user');
-    if (userData) {
+    if (userData && userData !== 'undefined') {
       return JSON.parse(userData) as User;
     }
   } catch (error) {
@@ -27,13 +27,13 @@ const initialState: AuthState = {
 };
 
 export const loginUser = createAsyncThunk('auth/login', async (credentials: { username: string; password: string }) => {
-  const response = await axios.post('/api/users/login', new URLSearchParams(credentials), {
+  const response = await axios.post('/api/login', new URLSearchParams(credentials), {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     withCredentials: true,
   });
-  return response.data;
+  return response.data.user;
 });
 
 export const registerUser = createAsyncThunk('auth/register', async (userData: User) => {
@@ -47,7 +47,7 @@ export const registerUser = createAsyncThunk('auth/register', async (userData: U
 });
 
 export const logoutUser = createAsyncThunk('auth/logout', async () => {
-  await axios.post('/api/users/logout', {}, { withCredentials: true });
+  await axios.post('/api/logout', {}, { withCredentials: true });
 });
 
 const authSlice = createSlice({

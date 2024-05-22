@@ -83,7 +83,14 @@ const Header: React.FC = () => {
           </ul>
         </nav>
       </div>
-      <LoginModal isOpen={isLoginModalOpen} onClose={() => setLoginModalOpen(false)} onRegister={() => { setLoginModalOpen(false); setRegisterModalOpen(true); }} />
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        onRegister={() => {
+          setLoginModalOpen(false);
+          setRegisterModalOpen(true);
+        }}
+      />
       <RegisterModal isOpen={isRegisterModalOpen} onClose={() => setRegisterModalOpen(false)} />
     </header>
   );
