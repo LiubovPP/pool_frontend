@@ -7,9 +7,10 @@
       "@pages/*": ["pages/*"],
       "@styles/*": ["styles/*"],
       "@assets/*": ["assets/*"],
-      "@utils/*": ["utils/*"],
+      "@utils/*": ["utils/*"]
       // "@types/*": ["types/*"]
     },
+    "types": ["vitest/globals"],
     "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
@@ -23,8 +24,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "types": ["vitest/globals"]
+    "jsx": "react-jsx"
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }

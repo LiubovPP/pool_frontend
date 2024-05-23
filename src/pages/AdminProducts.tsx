@@ -7,7 +7,7 @@ import { Product } from '@app/types';
 const AdminProducts: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const { products, loading, error } = useSelector((state: RootState) => state.products);
-  const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({ title: '', description: '', price: 0, imageUrl: '' });
+  const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({ title: '', category: '', price: 0, imageUrl: '' });
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const AdminProducts: React.FC = () => {
 
   const handleAddProduct = () => {
     dispatch(addProduct(newProduct));
-    setNewProduct({ title: '', description: '', price: 0, imageUrl: '' });
+    setNewProduct({ title: '', category: '', price: 0, imageUrl: '' });
   };
 
   const handleUpdateProduct = (product: Product) => {
@@ -42,8 +42,8 @@ const AdminProducts: React.FC = () => {
                 />
                 <input
                   type="text"
-                  value={editingProduct.description}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
+                  value={editingProduct.category}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })}
                 />
                 <input
                   type="number"
@@ -54,7 +54,7 @@ const AdminProducts: React.FC = () => {
               </div>
             ) : (
               <div>
-                {product.title} - {product.description} - {product.price} руб.
+                {product.title} - {product.category} - {product.price} руб.
                 <button onClick={() => setEditingProduct(product)}>Редактировать</button>
               </div>
             )}
@@ -71,8 +71,8 @@ const AdminProducts: React.FC = () => {
         />
         <input
           type="text"
-          value={newProduct.description}
-          onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+          value={newProduct.category}
+          onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
           placeholder="Описание"
         />
         <input
