@@ -34,7 +34,7 @@ const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product })
       <div className="modal-content">
         <h2>{product.title}</h2>
         <img src={product.imageUrl} alt={product.title} className="product-image-modal" />
-        <p>Описание: {product.description}</p>
+        <p>Описание: {product.category}</p>
         <p>Цена: {product.price} руб.</p>
         <button onClick={handleAddToCart}>Добавить в корзину</button>
         <button onClick={onClose}>Закрыть</button>
