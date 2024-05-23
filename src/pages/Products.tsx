@@ -30,7 +30,9 @@ const Products: React.FC = () => {
         quantity: 1,
       };
       dispatch(addToCart(cartProduct));
+      console.log("addToCart")
     }
+
   };
 
   const handleDeleteProduct = (id: number) => {

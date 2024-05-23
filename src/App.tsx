@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '@app/store';
@@ -11,9 +11,20 @@ import Profile from '@pages/Profile';
 import AdminUsers from '@pages/AdminUsers';
 import AdminProducts from '@pages/AdminProducts';
 import '@styles/App.css';
+import { useAppDispatch } from '@app/hooks';
+import { fetchCurrentUser } from '@app/slices/authSlice';
 
 const App: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchCurrentUser())
+    }
+  }, [isAuthenticated])
+
 
   return (
 
@@ -21,7 +32,7 @@ const App: React.FC = () => {
       <Header />
 
       <main className="main-content">
-        
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
