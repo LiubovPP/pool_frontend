@@ -9,7 +9,9 @@ const Home: React.FC = () => {
   return (
     <div className="home-container">
       <span className="welcome-message">
+     
         Добро пожаловать {user?.firstName} {user?.lastName} !
+       
       </span>
     </div>
   );

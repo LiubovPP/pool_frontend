@@ -1,6 +1,6 @@
-/* BackgroundImage.css */
-/* .background-image {
-  background-image: url('../image/head-d.png');
+/* BackgroundImage.css 
+.background-image {
+  background-image: url('./assts/head-d.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -10,4 +10,18 @@
   top: 0;
   left: 0;
   z-index: -1;
-} */
+} 
+*/
+/* BackgroundImage.css */
+.background-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: -1; /* Размещает фоновое изображение за другими элементами */
+}
+

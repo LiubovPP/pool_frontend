@@ -41,7 +41,7 @@ const Header: React.FC = () => {
           <a href="/"><img src={logo} alt="Logo" /></a>
         </div>
         <nav className="nav">
-          <ul className="nav-list">
+          <ul className="nav-list"> 
             <li>
               <Link to="/pools/">Бассейны</Link>
             </li>
@@ -92,7 +92,9 @@ const Header: React.FC = () => {
         }}
       />
       <RegisterModal isOpen={isRegisterModalOpen} onClose={() => setRegisterModalOpen(false)} />
+    
     </header>
+    
   );
 };
 
