@@ -28,7 +28,7 @@ export const addProduct = createAsyncThunk(
       },
     });
     return response.data;
-  },
+  }
 );
 
 export const updateProduct = createAsyncThunk(
@@ -40,7 +40,7 @@ export const updateProduct = createAsyncThunk(
       },
     });
     return response.data;
-  },
+  }
 );
 
 export const deleteProduct = createAsyncThunk('products/deleteProduct', async (id: number) => {
