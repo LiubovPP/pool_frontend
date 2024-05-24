@@ -106,4 +106,3 @@ const validateLogin = (credentials: { username: string; password: string }) => {
 };
 
 export default LoginModal;
-

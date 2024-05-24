@@ -211,4 +211,3 @@ const validateRegister = (userData: User) => {
 };
 
 export default RegisterModal;
-
