@@ -13,6 +13,7 @@ import AdminProducts from '@pages/AdminProducts';
 import '@styles/App.css';
 import { useAppDispatch } from '@app/hooks';
 import { fetchCurrentUser } from '@app/slices/authSlice';
+import ErrorPage from '@pages/ErrorPage';
 
 const App: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -38,6 +39,7 @@ const App: React.FC = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="*" element={<ErrorPage/>} />
           {user && user.role === 'ADMIN' && (
             <>
               <Route path="/admin/users" element={<AdminUsers />} />
