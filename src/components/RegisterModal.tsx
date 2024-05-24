@@ -16,9 +16,10 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const { error } = useSelector((state: RootState) => state.auth);
+  const { error, validationErrors } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (isOpen) {
@@ -29,11 +30,21 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
 
   const handleRegister = async () => {
     const validationErrors = validateRegister({ firstName, lastName, email, password, phoneNumber, role: 'USER' } as User);
+    if (password !== confirmPassword) {
+      validationErrors.confirmPassword = 'Пароли не совпадают';
+    }
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
     await dispatch(registerUser({ firstName, lastName, email, password, phoneNumber, role: 'USER' } as User));
+    setFirstName('');
+    setLastName('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setPhoneNumber('');
+    onClose();
   };
 
   const validateField = (name: string, value: string) => {
@@ -76,6 +87,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
       setEmail(value);
     } else if (name === 'password') {
       setPassword(value);
+    } else if (name === 'confirmPassword') {
+      setConfirmPassword(value);
     } else if (name === 'phoneNumber') {
       setPhoneNumber(value);
     }
@@ -136,6 +149,18 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
         {errors.password && <div style={{ color: 'red' }}>{errors.password}</div>}
       </div>
       <div className="input-group">
+        <label htmlFor="confirmPassword">Подтвердите пароль</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          value={confirmPassword}
+          onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+          placeholder="Подтвердите пароль"
+          style={{ borderColor: errors.confirmPassword ? 'red' : 'initial' }}
+        />
+        {errors.confirmPassword && <div style={{ color: 'red' }}>{errors.confirmPassword}</div>}
+      </div>
+      <div className="input-group">
         <label htmlFor="phoneNumber">Телефон</label>
         <input
           type="text"
@@ -164,8 +189,8 @@ const validateRegister = (userData: User) => {
   if (!/^\S+@\S+\.\S+$/.test(userData.email)) {
     errors.email = 'Неверный формат email';
   }
-  if (userData.password.length < 3) {
-    errors.password = 'Пароль должен содержать минимум 3 символа';
+  if (userData.password.length < 8) {
+    errors.password = 'Пароль должен содержать минимум 8 символов';
   }
   if (!/[A-Z]/.test(userData.password)) {
     errors.password = 'Пароль должен содержать хотя бы одну заглавную букву';
@@ -186,3 +211,4 @@ const validateRegister = (userData: User) => {
 };
 
 export default RegisterModal;
+
