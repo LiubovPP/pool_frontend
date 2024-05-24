@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '@app/store';
@@ -10,13 +10,23 @@ import Cart from '@pages/Cart';
 import Profile from '@pages/Profile';
 import AdminUsers from '@pages/AdminUsers';
 import AdminProducts from '@pages/AdminProducts';
+import OrdersPage from '@pages/Orders';
 import '@styles/App.css';
+import { useAppDispatch } from '@app/hooks';
+import { fetchCurrentUser } from '@app/slices/authSlice';
 
 const App: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchCurrentUser());
+    }
+  }, [isAuthenticated, dispatch]);
 
   return (
-
     <div className="app">
       <Header />
       <main className="main-content">
@@ -25,6 +35,7 @@ const App: React.FC = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/orders" element={<OrdersPage />} />
           {user && user.role === 'ADMIN' && (
             <>
               <Route path="/admin/users" element={<AdminUsers />} />
@@ -35,7 +46,6 @@ const App: React.FC = () => {
       </main>
       <Footer />
     </div>
-
   );
 };
 

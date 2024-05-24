@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@app/store';
 import { fetchProducts, addProduct, deleteProduct } from '@app/slices/productsSlice';
-import { addToCart } from '@app/slices/cartSlice';
+import { addToCart, addToLocalCart, fetchCart } from '@app/slices/cartSlice';
 import { Product, CartProduct } from '@app/types';
 import ProductModal from '@components/ProductModal';
 import '@styles/Products.css';
@@ -11,12 +11,16 @@ const Products: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const { products, loading, error } = useSelector((state: RootState) => state.products);
   const { user } = useSelector((state: RootState) => state.auth);
+  const { cart } = useSelector((state: RootState) => state.cart);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({ title: '', description: '', price: 0, imageUrl: '' });
+  const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({ title: '', category: '', price: 0, imageUrl: '' });
 
   useEffect(() => {
     dispatch(fetchProducts());
-  }, [dispatch]);
+    if (user && user.id) {
+      dispatch(fetchCart(user.id));
+    }
+  }, [dispatch, user]);
 
   const handleAddToCart = (product: Product) => {
     if (user && user.id) {
@@ -24,8 +28,17 @@ const Products: React.FC = () => {
         cartId: user.id,
         productId: product.id,
         quantity: 1,
+        price: product.price
       };
       dispatch(addToCart(cartProduct));
+    } else {
+      const localCartProduct: Omit<CartProduct, 'id'> = {
+        cartId: -1,
+        productId: product.id,
+        quantity: 1,
+        price: product.price
+      };
+      dispatch(addToLocalCart(localCartProduct));
     }
   };
 
@@ -35,13 +48,11 @@ const Products: React.FC = () => {
 
   const handleAddProduct = () => {
     dispatch(addProduct(newProduct));
-    setNewProduct({ title: '', description: '', price: 0, imageUrl: '' });
+    setNewProduct({ title: '', category: '', price: 0, imageUrl: '' });
   };
 
   if (loading) return <p>Загрузка...</p>;
   if (error) return <p>{error}</p>;
-
-  console.log('Products User:', user); // проверка данных пользователя
 
   return (
     <div>
@@ -72,8 +83,8 @@ const Products: React.FC = () => {
           />
           <input
             type="text"
-            value={newProduct.description}
-            onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+            value={newProduct.category}
+            onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
             placeholder="Описание"
           />
           <input
@@ -97,6 +108,21 @@ const Products: React.FC = () => {
           onClose={() => setSelectedProduct(null)}
           product={selectedProduct}
         />
+      )}
+      {cart && (
+        <div className="cart-summary">
+          <h2>Корзина</h2>
+          <ul>
+            {cart.products.map((item) => (
+              <li key={item.productId}>
+                {products.find(product => product.id === item.productId)?.title} - Количество: {item.quantity}
+              </li>
+            ))}
+          </ul>
+          <div>
+            Всего товаров в корзине: {cart.products.reduce((total, item) => total + item.quantity, 0)}
+          </div>
+        </div>
       )}
     </div>
   );
