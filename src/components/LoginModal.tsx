@@ -15,7 +15,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const { error, validationErrors } = useSelector((state: RootState) => state.auth);
+  const { error } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (isOpen) {
@@ -31,7 +31,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) 
       return;
     }
     await dispatch(loginUser({ username, password }));
-    onClose();
   };
 
   const validateField = (name: string, value: string) => {
@@ -99,11 +98,10 @@ const validateLogin = (credentials: { username: string; password: string }) => {
   if (credentials.username.trim().length < 3) {
     errors.username = 'Имя пользователя должно содержать минимум 3 символа';
   }
-  if (credentials.password.length < 8) {
-    errors.password = 'Пароль должен содержать минимум 8 символов';
+  if (credentials.password.length < 3) {
+    errors.password = 'Пароль должен содержать минимум 3 символов';
   }
   return errors;
 };
 
 export default LoginModal;
-
