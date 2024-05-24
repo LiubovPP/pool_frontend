@@ -70,14 +70,16 @@ const Cart: React.FC = () => {
         ))}
       </ul>
       {cart && cart.products.length > 0 && (
-        <button onClick={handleOrder}>Оформить заказ</button>
+        <div>
+          <button onClick={handleOrder}>Оформить заказ</button>
+          <p>Общая сумма: {cart.products.reduce((total, item) => total + item.quantity * item.price, 0)} руб.</p>
+        </div>
       )}
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setLoginModalOpen(false)}
         onRegister={() => {
           setLoginModalOpen(false);
-          
         }}
       />
       <OrderModal

@@ -3,7 +3,7 @@ import authReducer from '@app/slices/authSlice';
 import cartReducer from '@app/slices/cartSlice';
 import productsReducer from '@app/slices/productsSlice';
 import usersReducer from '@app/slices/usersSlice';
-import ordersReducer from '@app/slices/orderSlice'; // Добавьте импорт ordersReducer
+import ordersReducer from '@app/slices/orderSlice';
 
 const store = configureStore({
   reducer: {

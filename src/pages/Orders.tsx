@@ -17,7 +17,6 @@ const OrdersPage: React.FC = () => {
   };
 
   const handleUpdateOrder = (id: number) => {
-    // Обработка обновления заказа (пример)
     dispatch(updateOrder({ id, userId: 1, summa: 100, itemsCount: 1, date: new Date().toISOString(), products: [] }));
   };
 
