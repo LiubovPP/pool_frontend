@@ -36,11 +36,8 @@ const App: React.FC = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
-<<<<<<< sergik_dev
           <Route path="*" element={<ErrorPage/>} />
-=======
           <Route path="/orders" element={<OrdersPage />} />
->>>>>>> development
           {user && user.role === 'ADMIN' && (
             <>
               <Route path="/admin/users" element={<AdminUsers />} />
