@@ -10,6 +10,7 @@ import Cart from '@pages/Cart';
 import Profile from '@pages/Profile';
 import AdminUsers from '@pages/AdminUsers';
 import AdminProducts from '@pages/AdminProducts';
+import OrdersPage from '@pages/Orders';
 import '@styles/App.css';
 import { useAppDispatch } from '@app/hooks';
 import { fetchCurrentUser } from '@app/slices/authSlice';
@@ -21,23 +22,20 @@ const App: React.FC = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (isAuthenticated) {
-      dispatch(fetchCurrentUser())
+      dispatch(fetchCurrentUser());
     }
-  }, [isAuthenticated])
-
+  }, [isAuthenticated, dispatch]);
 
   return (
-
     <div className="app">
       <Header />
-
       <main className="main-content">
-
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/orders" element={<OrdersPage />} />
           {user && user.role === 'ADMIN' && (
             <>
               <Route path="/admin/users" element={<AdminUsers />} />
@@ -48,7 +46,6 @@ const App: React.FC = () => {
       </main>
       <Footer />
     </div>
-
   );
 };
 

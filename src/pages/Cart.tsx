@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@app/store';
-import { fetchCart, addToCart, removeFromCart, updateCartProduct, clearCart } from '@app/slices/cartSlice';
+import { fetchCart, addToCart, removeFromCart, updateCartProduct, clearCart, updateLocalCartProduct, removeFromLocalCart } from '@app/slices/cartSlice';
 import { CartProduct } from '@app/types';
-import axios from 'axios';
 import '@styles/Cart.css';
 import LoginModal from '@components/LoginModal';
+import OrderModal from '@components/OrderModal';
 
 const Cart: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const { cart, loading, error } = useSelector((state: RootState) => state.cart);
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+  const [isOrderModalOpen, setOrderModalOpen] = useState(false);
 
   useEffect(() => {
     if (user && user.id) {
@@ -21,13 +22,21 @@ const Cart: React.FC = () => {
 
   const handleRemove = (cartProductId: number) => {
     if (cart) {
-      dispatch(removeFromCart({ cartId: cart.id, cartProductId }));
+      if (isAuthenticated) {
+        dispatch(removeFromCart(cartProductId));
+      } else {
+        dispatch(removeFromLocalCart(cartProductId));
+      }
     }
   };
 
   const handleUpdateQuantity = (product: CartProduct, quantity: number) => {
     if (cart) {
-      dispatch(updateCartProduct({ ...product, quantity }));
+      if (isAuthenticated) {
+        dispatch(updateCartProduct({ ...product, quantity }));
+      } else {
+        dispatch(updateLocalCartProduct({ ...product, quantity }));
+      }
     }
   };
 
@@ -36,26 +45,20 @@ const Cart: React.FC = () => {
       setLoginModalOpen(true);
       return;
     }
-
-    if (user && cart) {
-      try {
-        await axios.post('/api/orders', {
-          userId: user.id,
-          products: cart.products,
-        });
-        dispatch(clearCart(cart.id));
-      } catch (error) {
-        console.error('Ошибка заказа', error);
-      }
-    }
+    setOrderModalOpen(true);
   };
 
   if (loading) return <p>Загрузка...</p>;
-  if (error) return <p>{error}</p>;
+
+  let errorMessage: string | null = null;
+  if (error) {
+    errorMessage = typeof error === 'string' ? error : 'Произошла ошибка';
+  }
 
   return (
     <div>
       <h1>Корзина</h1>
+      {errorMessage && <p className="error">{errorMessage}</p>}
       <ul className="cart-list">
         {cart?.products.map((item) => (
           <li key={item.id}>
@@ -74,7 +77,17 @@ const Cart: React.FC = () => {
         onClose={() => setLoginModalOpen(false)}
         onRegister={() => {
           setLoginModalOpen(false);
-          // можно добавить открытие модального окна регистрации
+          
+        }}
+      />
+      <OrderModal
+        isOpen={isOrderModalOpen}
+        onClose={() => setOrderModalOpen(false)}
+        cart={cart}
+        user={user}
+        onOrderSuccess={() => {
+          setOrderModalOpen(false);
+          // добавить обработчик успешного заказа
         }}
       />
     </div>
