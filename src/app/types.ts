@@ -15,33 +15,23 @@ export interface User {
 export interface Product {
   id: number
   title: string
-  category: string
+  description: string
   price: number
   imageUrl: string
 }
 
 export interface OrderProduct {
-  id: number;
-  orderId: number;
-  productId: number;
-  quantity: number;
-}
-
-export interface Order {
-  id: number;
-  userId: number;
-  summa: number;
-  itemsCount: number;
-  date: string;
-  products: OrderProduct[];
+  id: number
+  orderId: number
+  productId: number
+  quantity: number
 }
 
 export interface CartProduct {
-  id: number;
-  cartId: number;
-  productId: number;
-  quantity: number;
-  price: number; 
+  id: number
+  cartId: number
+  productId: number
+  quantity: number
 }
 
 export interface Cart {

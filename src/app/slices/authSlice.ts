@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { User, UserRole } from "@app/types";
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { User } from '@app/types';
 
 interface AuthState {
   user: User | null;
@@ -9,9 +9,21 @@ interface AuthState {
   validationErrors: { [key: string]: string };
 }
 
+const getUserFromLocalStorage = (): User | null => {
+  try {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      return JSON.parse(userData) as User;
+    }
+  } catch (error) {
+    console.error('Error parsing user from localStorage:', error);
+  }
+  return null;
+};
+
 const initialState: AuthState = {
-  user: null,
-  isAuthenticated: !!localStorage.getItem('isAuthenticated'),
+  user: getUserFromLocalStorage(),
+  isAuthenticated: !!getUserFromLocalStorage(),
   error: null,
   validationErrors: {}
 };
@@ -89,23 +101,18 @@ export const registerUser = createAsyncThunk('auth/register', async (userData: U
   return response.data;
 });
 
-export const logoutUser = createAsyncThunk("auth/logout", async () => {
-  await axios.post("/api/logout", {}, { withCredentials: true });
-});
-
-export const fetchCurrentUser = createAsyncThunk("auth/user", async () => {
-  const response = await axios.get("/api/users/profile");
-  return response.data;
+export const logoutUser = createAsyncThunk('auth/logout', async () => {
+  await axios.post('/api/users/logout', {}, { withCredentials: true });
 });
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     logout(state) {
       state.user = null;
       state.isAuthenticated = false;
-      localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem('user');
     },
     clearLoginError(state) {
       state.error = null;
@@ -116,14 +123,13 @@ const authSlice = createSlice({
       state.validationErrors = {};
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
       .addCase(loginUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.user = action.payload;
         state.isAuthenticated = true;
         state.error = null;
         state.validationErrors = {};
-        localStorage.setItem("isAuthenticated", JSON.stringify(true));
         localStorage.setItem('user', JSON.stringify(action.payload));
       })
       .addCase(loginUser.rejected, (state, action: PayloadAction<any>) => {
@@ -135,35 +141,21 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.error = null;
         state.validationErrors = {};
-        localStorage.setItem("isAuthenticated", JSON.stringify(true));
         localStorage.setItem('user', JSON.stringify(action.payload));
       })
       .addCase(registerUser.rejected, (state, action: PayloadAction<any>) => {
         state.error = 'Ошибка регистрации';
         state.validationErrors = action.payload || {};
       })
-      .addCase(logoutUser.fulfilled, state => {
+      .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.isAuthenticated = false;
         state.error = null;
         state.validationErrors = {};
-        localStorage.removeItem("isAuthenticated");
         localStorage.removeItem('user');
-      })
-      .addCase(fetchCurrentUser.fulfilled, (state, action: PayloadAction<User>) => {
-        state.user = action.payload;
-        state.isAuthenticated = true;
-        state.error = null;
-      })
-      .addCase(fetchCurrentUser.rejected, state => {
-        state.user = null;
-        state.isAuthenticated = false;
-        state.error = "Access to user denied";
-        localStorage.removeItem("isAuthenticated");
       });
   },
 });
 
 export const { logout, clearLoginError, clearRegisterError } = authSlice.actions;
 export default authSlice.reducer;
-

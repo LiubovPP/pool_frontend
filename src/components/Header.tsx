@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { RootState, AppDispatch } from '@app/store';
-import { logoutUser, fetchCurrentUser } from '@app/slices/authSlice';
-import { clearLocalCart, syncCartWithLocal, fetchCart } from '@app/slices/cartSlice'; 
+import { logoutUser } from '@app/slices/authSlice';
 import LoginModal from '@components/LoginModal';
 import RegisterModal from '@components/RegisterModal';
 import { FaShoppingCart } from 'react-icons/fa';
@@ -25,7 +24,6 @@ const Header: React.FC = () => {
   const handleLogout = async () => {
     try {
       await dispatch(logoutUser()).unwrap();
-      dispatch(clearLocalCart()); 
       navigate('/');
     } catch (error) {
       console.error('Ошибка выхода', error);
@@ -35,27 +33,6 @@ const Header: React.FC = () => {
   const handleLogin = () => {
     setLoginModalOpen(true);
   };
-
-  const handleSyncCart = async () => {
-    if (isAuthenticated) {
-      const localCart = JSON.parse(localStorage.getItem('cart') || 'null');
-      if (localCart) {
-        dispatch(syncCartWithLocal(localCart));
-      }
-      try {
-        await dispatch(fetchCurrentUser()).unwrap();
-        if (user) {
-          await dispatch(fetchCart(user.id)).unwrap();
-        }
-      } catch (error) {
-        console.error('Ошибка при синхронизации корзины', error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    handleSyncCart();
-  }, [isAuthenticated]);
 
   return (
     <header className="header">
@@ -89,9 +66,6 @@ const Header: React.FC = () => {
                   <Link to="/profile">Профиль</Link>
                 </li>
                 <li>
-                  <Link to="/orders">Мои заказы</Link>
-                </li>
-                <li>
                   <button onClick={handleLogout} className="nav-button">Выйти</button>
                 </li>
               </>
@@ -109,14 +83,7 @@ const Header: React.FC = () => {
           </ul>
         </nav>
       </div>
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setLoginModalOpen(false)}
-        onRegister={() => {
-          setLoginModalOpen(false);
-          setRegisterModalOpen(true);
-        }}
-      />
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setLoginModalOpen(false)} onRegister={() => { setLoginModalOpen(false); setRegisterModalOpen(true); }} />
       <RegisterModal isOpen={isRegisterModalOpen} onClose={() => setRegisterModalOpen(false)} />
     </header>
   );
