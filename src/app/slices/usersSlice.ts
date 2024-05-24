@@ -15,7 +15,7 @@ const initialState: UsersState = {
 };
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
-  const response = await axios.get('/api/users/users');
+  const response = await axios.get('/api/users');
   return response.data;
 });
 

@@ -28,7 +28,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
 
     await dispatch(registerUser({ firstName, lastName, email, password, phoneNumber, role: 'USER' } as User));
     
-    // Очистка полей после успешной регистрации
     setFirstName('');
     setLastName('');
     setEmail('');

@@ -1,30 +1,18 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit"
-import axios from "axios"
-import { User, UserRole } from "@app/types"
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import { User, UserRole } from "@app/types";
 
 interface AuthState {
-  user: User | null
-  isAuthenticated: boolean
-  error: string | null
+  user: User | null;
+  isAuthenticated: boolean;
+  error: string | null;
 }
-
-// const getUserFromLocalStorage = (): User | null => {
-//   try {
-//     const userData = localStorage.getItem("user")
-//     if (userData && userData !== "undefined") {
-//       return JSON.parse(userData) as User
-//     }
-//   } catch (error) {
-//     console.error("Error parsing user from localStorage:", error)
-//   }
-//   return null
-// }
 
 const initialState: AuthState = {
   user: null,
-  isAuthenticated: !!localStorage.getItem('isAuthenticated'), //!! или Boolean()
+  isAuthenticated: !!localStorage.getItem('isAuthenticated'),
   error: null,
-}
+};
 
 export const loginUser = createAsyncThunk(
   "auth/login",
@@ -38,10 +26,10 @@ export const loginUser = createAsyncThunk(
         },
         withCredentials: true,
       },
-    )
-    return response.data.user
+    );
+    return response.data.user;
   },
-)
+);
 
 export const registerUser = createAsyncThunk(
   "auth/register",
@@ -51,70 +39,71 @@ export const registerUser = createAsyncThunk(
         "Content-Type": "application/json",
       },
       withCredentials: true,
-    })
-    return response.data
+    });
+    return response.data;
   },
-)
+);
 
 export const logoutUser = createAsyncThunk("auth/logout", async () => {
-  await axios.post("/api/logout", {}, { withCredentials: true })
-})
+  await axios.post("/api/logout", {}, { withCredentials: true });
+});
 
 export const fetchCurrentUser = createAsyncThunk("auth/user", async () => {
-  const response = await axios.get("/api/users/profile")
-  return response.data
-})
+  const response = await axios.get("/api/users/profile");
+  return response.data;
+});
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
     logout(state) {
-      state.user = null
-      state.isAuthenticated = false
-      localStorage.removeItem("user")
+      state.user = null;
+      state.isAuthenticated = false;
+      localStorage.removeItem("isAuthenticated");
     },
   },
   extraReducers: builder => {
     builder
       .addCase(loginUser.fulfilled, (state, action: PayloadAction<User>) => {
-        state.isAuthenticated = true
-        state.error = null
-        localStorage.setItem("isAuthenticated", JSON.stringify(true))
+        state.user = action.payload;
+        state.isAuthenticated = true;
+        state.error = null;
+        localStorage.setItem("isAuthenticated", JSON.stringify(true));
       })
       .addCase(loginUser.rejected, state => {
-        state.error = "Неверный логин или пароль"
+        state.error = "Неверный логин или пароль";
       })
       .addCase(registerUser.fulfilled, (state, action: PayloadAction<User>) => {
-        state.isAuthenticated = true
-        state.error = null
-        // localStorage.setItem('user', JSON.stringify(action.payload));
+        state.user = action.payload;
+        state.isAuthenticated = true;
+        state.error = null;
       })
       .addCase(registerUser.rejected, state => {
-        state.error = "Ошибка регистрации"
+        state.error = "Ошибка регистрации";
       })
       .addCase(logoutUser.fulfilled, state => {
-        state.user = null
-        state.isAuthenticated = false
-        state.error = null
-        localStorage.removeItem("isAuthenticated")
+        state.user = null;
+        state.isAuthenticated = false;
+        state.error = null;
+        localStorage.removeItem("isAuthenticated");
       })
       .addCase(
         fetchCurrentUser.fulfilled,
         (state, action: PayloadAction<User>) => {
-          state.user = action.payload
-          state.isAuthenticated = true
-          state.error = null
+          state.user = action.payload;
+          state.isAuthenticated = true;
+          state.error = null;
         },
       )
       .addCase(fetchCurrentUser.rejected, state => {
-        state.user = null
-        state.isAuthenticated = false
-        state.error = "Access to user denied"
-        localStorage.removeItem("isAuthenticated")
-      })
+        state.user = null;
+        state.isAuthenticated = false;
+        state.error = "Access to user denied";
+        localStorage.removeItem("isAuthenticated");
+      });
   },
-})
+});
 
-export const { logout } = authSlice.actions
-export default authSlice.reducer
+export const { logout } = authSlice.actions;
+export default authSlice.reducer;

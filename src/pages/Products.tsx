@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '@app/store';
 import { fetchProducts, addProduct, deleteProduct } from '@app/slices/productsSlice';
-import { addToCart, fetchCart } from '@app/slices/cartSlice';
+import { addToCart, addToLocalCart, fetchCart } from '@app/slices/cartSlice';
 import { Product, CartProduct } from '@app/types';
 import ProductModal from '@components/ProductModal';
 import '@styles/Products.css';
@@ -13,7 +13,7 @@ const Products: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const { cart } = useSelector((state: RootState) => state.cart);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({ title: '', description: '', price: 0, imageUrl: '' });
+  const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({ title: '', category: '', price: 0, imageUrl: '' });
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -28,11 +28,18 @@ const Products: React.FC = () => {
         cartId: user.id,
         productId: product.id,
         quantity: 1,
+        price: product.price
       };
       dispatch(addToCart(cartProduct));
-      console.log("addToCart")
+    } else {
+      const localCartProduct: Omit<CartProduct, 'id'> = {
+        cartId: -1,
+        productId: product.id,
+        quantity: 1,
+        price: product.price
+      };
+      dispatch(addToLocalCart(localCartProduct));
     }
-
   };
 
   const handleDeleteProduct = (id: number) => {
@@ -41,13 +48,11 @@ const Products: React.FC = () => {
 
   const handleAddProduct = () => {
     dispatch(addProduct(newProduct));
-    setNewProduct({ title: '', description: '', price: 0, imageUrl: '' });
+    setNewProduct({ title: '', category: '', price: 0, imageUrl: '' });
   };
 
   if (loading) return <p>Загрузка...</p>;
   if (error) return <p>{error}</p>;
-
-  console.log('Products User:', user); // проверка данных пользователя
 
   return (
     <div>
@@ -78,8 +83,8 @@ const Products: React.FC = () => {
           />
           <input
             type="text"
-            value={newProduct.description}
-            onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+            value={newProduct.category}
+            onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
             placeholder="Описание"
           />
           <input
