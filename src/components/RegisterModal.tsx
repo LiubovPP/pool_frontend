@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser, clearRegisterError } from '@app/slices/authSlice';
+import { registerUser, clearRegisterError, validateRegister } from '@app/slices/authSlice';
 import '@styles/Modals.css';
 import { RootState, AppDispatch } from '@app/store';
-import { User } from '@app/types';
+import { User, UserWithPassword } from '@app/types';
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -29,7 +29,11 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
   }, [isOpen, dispatch]);
 
   const handleRegister = async () => {
-    const validationErrors = validateRegister({ firstName, lastName, email, password, phoneNumber, role: 'USER' } as User);
+    const userData: UserWithPassword = {
+      firstName, lastName, email, password, phoneNumber, role: 'USER',
+      id: 0
+    };
+    const validationErrors = validateRegister(userData);
     if (password !== confirmPassword) {
       validationErrors.confirmPassword = 'Пароли не совпадают';
     }
@@ -37,7 +41,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
       setErrors(validationErrors);
       return;
     }
-    await dispatch(registerUser({ firstName, lastName, email, password, phoneNumber, role: 'USER' } as User));
+    await dispatch(registerUser(userData));
     setFirstName('');
     setLastName('');
     setEmail('');
@@ -176,38 +180,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
       <button onClick={onClose}>Закрыть</button>
     </div>
   );
-};
-
-const validateRegister = (userData: User) => {
-  const errors: { [key: string]: string } = {};
-  if (userData.firstName.trim().length < 2) {
-    errors.firstName = 'Поле должно содержать минимум 2 символа';
-  }
-  if (userData.lastName.trim().length < 2) {
-    errors.lastName = 'Поле должно содержать минимум 2 символа';
-  }
-  if (!/^\S+@\S+\.\S+$/.test(userData.email)) {
-    errors.email = 'Неверный формат email';
-  }
-  if (userData.password.length < 8) {
-    errors.password = 'Пароль должен содержать минимум 8 символов';
-  }
-  if (!/[A-Z]/.test(userData.password)) {
-    errors.password = 'Пароль должен содержать хотя бы одну заглавную букву';
-  }
-  if (!/[a-z]/.test(userData.password)) {
-    errors.password = 'Пароль должен содержать хотя бы одну строчную букву';
-  }
-  if (!/[0-9]/.test(userData.password)) {
-    errors.password = 'Пароль должен содержать хотя бы одну цифру';
-  }
-  if (!/[!@#$%^&*]/.test(userData.password)) {
-    errors.password = 'Пароль должен содержать хотя бы один специальный символ';
-  }
-  if (!/^\+?[0-9]{3}-?[0-9]{6,12}$/.test(userData.phoneNumber)) {
-    errors.phoneNumber = 'Неверный формат номера телефона';
-  }
-  return errors;
 };
 
 export default RegisterModal;
