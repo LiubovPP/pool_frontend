@@ -31,6 +31,6 @@ body {
   flex: 1;
   z-index: 1;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.274);
+  /*background: rgba(255, 255, 255, 0.274);*/
   margin-top: 70px;
 }

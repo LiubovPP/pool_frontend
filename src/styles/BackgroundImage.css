@@ -12,8 +12,8 @@
   z-index: -1;
 } 
 */
-/* BackgroundImage.css */
 .background-image {
+
   position: fixed;
   top: 0;
   left: 0;
@@ -23,5 +23,6 @@
   background-repeat: no-repeat;
   background-position: center;
   z-index: -1; /* Размещает фоновое изображение за другими элементами */
-  background-image: url('../scr/assets/head-d.png'); 
+  opacity: 1; /* Устанавливает непрозрачность на 100% */
+  
 }

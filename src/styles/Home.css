@@ -1,10 +1,93 @@
+.header {
+  background-color: #5788f5;
+  color: white;
+  padding: 10px 20px;display: flex;
+  flex-direction: column;
+  /*align-items: center; /* Центрирует дочерние элементы по горизонтали */
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand a img {
+  height: 40px;
+}
+
+.nav {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  
+  gap: 20px;
+}
+
+.nav-list li {
+  position: relative;
+}
+
+.nav-list li a,
+.nav-list li button {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.cart-icon {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.cart-icon a {
+  color: white;
+  position: relative;
+}
+
+.cart-count {
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 8px;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 12px;
+}
 .home-container {
-  text-align: center;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Обеспечивает высоту контейнера на всю высоту видимого окна */
+ 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  text-align: center; /* Центрирует текст по горизонтали внутри блока */
 }
 
 .welcome-message {
-  font-size: 24px;
+  font-size: 27px;
   font-weight: bold;
-  color: #333;
+  color: #fbfbfa;
+  position: absolute;
+  top: 250px;
 }

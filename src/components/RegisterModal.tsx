@@ -40,6 +40,12 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
         error = 'Пароль должен содержать минимум 4 символа, одну заглавную букву, одну строчную букву, одну цифру и один специальный символ';
       }
     }
+    else if (name === 'phoneNumber') {
+      const phoneRegex = /^\+?[\d\s\-()]{7,15}$/;
+      if (!phoneRegex.test(value)) {
+        error = 'Некорректный номер телефона';
+      }
+    }
 
     setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
   };
@@ -122,9 +128,13 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
       <input
         type="text"
         value={phoneNumber}
-        onChange={(e) => setPhoneNumber(e.target.value)}
+        onChange={(e) => {
+          setPhoneNumber(e.target.value);
+          validateField('phoneNumber', e.target.value);
+        }}
         placeholder="Телефон"
-      />
+        />
+        {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
       <button onClick={handleRegister} disabled={Object.values(errors).some((error) => error !== '')}>Регистрация</button>
       <button onClick={onClose}>Закрыть</button>
     </div>
