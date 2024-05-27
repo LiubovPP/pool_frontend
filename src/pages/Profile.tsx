@@ -27,7 +27,6 @@ const Profile: React.FC = () => {
       setEditingUser(null);
     }
   };
-
   if (!user) {
     return <p>Вы не авторизованы</p>;
   }
