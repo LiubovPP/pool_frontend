@@ -1,7 +1,7 @@
 import type React from "react"
+import { useAppSelector } from "@app/hooks/hooks"
 import type { RootState } from "@app/store"
 import "@styles/Home.css"
-import { useAppSelector } from "@app/hooks/hooks"
 
 const Home: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth)

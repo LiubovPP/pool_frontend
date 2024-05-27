@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import type { User } from "@app/types";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import axios from "axios"
+import type { User } from "@app/types"
 
 interface AuthState {
   user: User | null;
@@ -10,9 +10,9 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  isAuthenticated: !!localStorage.getItem('isAuthenticated'),
-  error: null,
-};
+  isAuthenticated: !!localStorage.getItem("isAuthenticated"),
+  error: null
+}
 
 export const loginUser = createAsyncThunk(
   "auth/login",
@@ -23,36 +23,36 @@ export const loginUser = createAsyncThunk(
       {
         withCredentials: true,
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
 
       }
-    );
-    return response.data.user;
+    )
+    return response.data.user
   }
-);
+)
 
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (userData: User) => {
     const response = await axios.post("/api/users/register", userData, {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      withCredentials: true,
-    });
-    return response.data;
+      withCredentials: true
+    })
+    return response.data
   }
-);
+)
 
 export const logoutUser = createAsyncThunk("auth/logout", async () => {
-  await axios.post("/api/logout", {}, { withCredentials: true });
-});
+  await axios.post("/api/logout", {}, { withCredentials: true })
+})
 
 export const fetchCurrentUser = createAsyncThunk("auth/user", async () => {
-  const response = await axios.get("/api/users/profile", { withCredentials: true });
-  return response.data;
-});
+  const response = await axios.get("/api/users/profile", { withCredentials: true })
+  return response.data
+})
 
 const authSlice = createSlice({
   name: "auth",
@@ -63,40 +63,40 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         // state.user = action.payload;
 
-        state.isAuthenticated = true;
-        state.error = null;
-        localStorage.setItem("isAuthenticated", JSON.stringify(true));
+        state.isAuthenticated = true
+        state.error = null
+        localStorage.setItem("isAuthenticated", JSON.stringify(true))
       })
       .addCase(loginUser.rejected, state => {
-        state.isAuthenticated = false;
-        state.error = "Неверный логин или пароль";
+        state.isAuthenticated = false
+        state.error = "Неверный логин или пароль"
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         // state.user = action.payload;
         // state.isAuthenticated = true;
-        state.error = null;
+        state.error = null
       })
       .addCase(registerUser.rejected, state => {
-        state.error = "Ошибка регистрации";
+        state.error = "Ошибка регистрации"
       })
       .addCase(logoutUser.fulfilled, state => {
-        state.user = null;
-        state.isAuthenticated = false;
-        state.error = null;
-        localStorage.removeItem("isAuthenticated");
+        state.user = null
+        state.isAuthenticated = false
+        state.error = null
+        localStorage.removeItem("isAuthenticated")
       })
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
-        state.user = action.payload;
-        state.isAuthenticated = true;
-        state.error = null;
+        state.user = action.payload
+        state.isAuthenticated = true
+        state.error = null
       })
       .addCase(fetchCurrentUser.rejected, state => {
-        state.user = null;
-        state.isAuthenticated = false;
-        state.error = "Access to user denied";
-        localStorage.removeItem("isAuthenticated");
-      });
-  },
-});
+        state.user = null
+        state.isAuthenticated = false
+        state.error = "Access to user denied"
+        localStorage.removeItem("isAuthenticated")
+      })
+  }
+})
 
-export default authSlice.reducer;
+export default authSlice.reducer

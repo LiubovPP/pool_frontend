@@ -1,58 +1,64 @@
-import type React from 'react';
-import { useEffect, useState } from 'react';
-import { useAppSelector, useAppDispatch } from '@app/hooks/hooks'; // Используем типизированные хуки
-import { fetchCart, removeFromCart, updateCartProduct, updateLocalCartProduct, removeFromLocalCart } from '@app/slices/cartSlice';
-import type { CartProduct } from '@app/types';
-import '@styles/Cart.css';
-import LoginModal from '@components/LoginModal';
-import OrderModal from '@components/OrderModal';
+import type React from "react"
+import { useEffect, useState } from "react"
+import { useAppSelector, useAppDispatch } from "@app/hooks/hooks" // Используем типизированные хуки
+import {
+  fetchCart,
+  removeFromCart,
+  updateCartProduct,
+  updateLocalCartProduct,
+  removeFromLocalCart
+} from "@app/slices/cartSlice"
+import type { CartProduct } from "@app/types"
+import "@styles/Cart.css"
+import LoginModal from "@components/LoginModal"
+import OrderModal from "@components/OrderModal"
 
 const Cart: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const { cart, loading, error } = useAppSelector((state) => state.cart);
-  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
-  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-  const [isOrderModalOpen, setOrderModalOpen] = useState(false);
+  const dispatch = useAppDispatch()
+  const { cart, loading, error } = useAppSelector((state) => state.cart)
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth)
+  const [isLoginModalOpen, setLoginModalOpen] = useState(false)
+  const [isOrderModalOpen, setOrderModalOpen] = useState(false)
 
   useEffect(() => {
     if (user && user.id) {
-      dispatch(fetchCart(user.id));
+      dispatch(fetchCart(user.id))
     }
-  }, [dispatch, user]);
+  }, [dispatch, user])
 
   const handleRemove = (cartProductId: number) => {
     if (cart) {
       if (isAuthenticated) {
-        dispatch(removeFromCart(cartProductId));
+        dispatch(removeFromCart(cartProductId))
       } else {
-        dispatch(removeFromLocalCart(cartProductId));
+        dispatch(removeFromLocalCart(cartProductId))
       }
     }
-  };
+  }
 
   const handleUpdateQuantity = (product: CartProduct, quantity: number) => {
     if (cart) {
       if (isAuthenticated) {
-        dispatch(updateCartProduct({ ...product, quantity }));
+        dispatch(updateCartProduct({ ...product, quantity }))
       } else {
-        dispatch(updateLocalCartProduct({ ...product, quantity }));
+        dispatch(updateLocalCartProduct({ ...product, quantity }))
       }
     }
-  };
+  }
 
   const handleOrder = async () => {
     if (!isAuthenticated) {
-      setLoginModalOpen(true);
-      return;
+      setLoginModalOpen(true)
+      return
     }
-    setOrderModalOpen(true);
-  };
+    setOrderModalOpen(true)
+  }
 
-  if (loading) return <p>Загрузка...</p>;
+  if (loading) return <p>Загрузка...</p>
 
-  let errorMessage: string | null = null;
+  let errorMessage: string | null = null
   if (error) {
-    errorMessage = typeof error === 'string' ? error : 'Произошла ошибка';
+    errorMessage = typeof error === "string" ? error : "Произошла ошибка"
   }
 
   return (
@@ -76,7 +82,7 @@ const Cart: React.FC = () => {
         isOpen={isLoginModalOpen}
         onClose={() => setLoginModalOpen(false)}
         onRegister={() => {
-          setLoginModalOpen(false);
+          setLoginModalOpen(false)
         }}
       />
       <OrderModal
@@ -85,12 +91,12 @@ const Cart: React.FC = () => {
         cart={cart}
         user={user}
         onOrderSuccess={() => {
-          setOrderModalOpen(false);
+          setOrderModalOpen(false)
           // добавить обработчик успешного заказа
         }}
       />
     </div>
-  );
-};
+  )
+}
 
-export default Cart;
+export default Cart

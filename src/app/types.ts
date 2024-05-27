@@ -41,12 +41,13 @@ export interface CartProduct {
   cartId: number;
   productId: number;
   quantity: number;
-  price: number; 
+  price: number;
 }
 
 export interface Cart {
   id: number
   products: CartProduct[]
 }
+
 export { UserRole }
 

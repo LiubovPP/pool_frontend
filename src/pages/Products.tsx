@@ -1,58 +1,63 @@
-import type React from 'react';
-import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@app/hooks/hooks';
-import { fetchProducts, addProduct, deleteProduct } from '@app/slices/productsSlice';
-import { addToCart, addToLocalCart, fetchCart } from '@app/slices/cartSlice';
-import type { Product, CartProduct } from '@app/types';
-import ProductModal from '@components/ProductModal';
-import '@styles/Products.css';
+import type React from "react"
+import { useEffect, useState } from "react"
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
+import { fetchProducts, addProduct, deleteProduct } from "@app/slices/productsSlice"
+import { addToCart, addToLocalCart, fetchCart } from "@app/slices/cartSlice"
+import type { Product, CartProduct } from "@app/types"
+import ProductModal from "@components/ProductModal"
+import "@styles/Products.css"
 
 const Products: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const { products, loading, error } = useAppSelector(state => state.products);
-  const { user, isAuthenticated } = useAppSelector(state => state.auth);
-  const { cart } = useAppSelector(state => state.cart);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({ title: '', category: '', price: 0, imageUrl: '' });
+  const dispatch = useAppDispatch()
+  const { products, loading, error } = useAppSelector(state => state.products)
+  const { user, isAuthenticated } = useAppSelector(state => state.auth)
+  const { cart } = useAppSelector(state => state.cart)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
+    title: "",
+    category: "",
+    price: 0,
+    imageUrl: ""
+  })
 
   useEffect(() => {
-    dispatch(fetchProducts());
+    dispatch(fetchProducts())
     if (isAuthenticated && user?.id) {
-      dispatch(fetchCart(user.id));
+      dispatch(fetchCart(user.id))
     }
-  }, [dispatch, isAuthenticated, user]);
+  }, [dispatch, isAuthenticated, user])
 
   const handleAddToCart = (product: Product) => {
     if (isAuthenticated && user?.id) {
-      const cartProduct: Omit<CartProduct, 'id'> = {
+      const cartProduct: Omit<CartProduct, "id"> = {
         cartId: user.id,
         productId: product.id,
         quantity: 1,
         price: product.price
-      };
-      dispatch(addToCart(cartProduct));
+      }
+      dispatch(addToCart(cartProduct))
     } else {
-      const localCartProduct: Omit<CartProduct, 'id'> = {
+      const localCartProduct: Omit<CartProduct, "id"> = {
         cartId: -1,
         productId: product.id,
         quantity: 1,
         price: product.price
-      };
-      dispatch(addToLocalCart(localCartProduct));
+      }
+      dispatch(addToLocalCart(localCartProduct))
     }
-  };
+  }
 
   const handleDeleteProduct = (id: number) => {
-    dispatch(deleteProduct(id));
-  };
+    dispatch(deleteProduct(id))
+  }
 
   const handleAddProduct = () => {
-    dispatch(addProduct(newProduct));
-    setNewProduct({ title: '', category: '', price: 0, imageUrl: '' });
-  };
+    dispatch(addProduct(newProduct))
+    setNewProduct({ title: "", category: "", price: 0, imageUrl: "" })
+  }
 
-  if (loading) return <p>Загрузка...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p>Загрузка...</p>
+  if (error) return <p>{error}</p>
 
   return (
     <div>
@@ -64,15 +69,22 @@ const Products: React.FC = () => {
             <div className="product-details">
               <span className="product-title">{product.title}</span>
               <span className="product-price">{product.price} руб.</span>
-              <button onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}>Добавить в корзину</button>
-              {user?.role === 'ADMIN' && (
-                <button onClick={(e) => { e.stopPropagation(); handleDeleteProduct(product.id); }}>Удалить продукт</button>
+              <button onClick={(e) => {
+                e.stopPropagation()
+                handleAddToCart(product)
+              }}>Добавить в корзину
+              </button>
+              {user?.role === "ADMIN" && (
+                <button onClick={(e) => {
+                  e.stopPropagation()
+                  handleDeleteProduct(product.id)
+                }}>Удалить продукт</button>
               )}
             </div>
           </div>
         ))}
       </div>
-      {user?.role === 'ADMIN' && (
+      {user?.role === "ADMIN" && (
         <div className="add-product-form">
           <h2>Добавить продукт</h2>
           <input
@@ -125,7 +137,7 @@ const Products: React.FC = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Products;
+export default Products

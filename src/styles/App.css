@@ -16,6 +16,18 @@ body {
   position: relative;
 }
 
+.main-content {
+  flex: 1;
+  /*z-index: 1;*/
+  padding: 20px;
+  /*background: rgba(255, 255, 255, 0.9);*/
+  /*margin-top: 70px;*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
 .footer {
   width: 100%;
   background-color: #192742;
@@ -25,12 +37,4 @@ body {
   align-items: center;
   z-index: 2;
   margin-top: auto;
-}
-
-.main-content {
-  flex: 1;
-  z-index: 1;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.274);
-  margin-top: 70px;
 }
