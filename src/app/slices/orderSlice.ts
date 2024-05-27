@@ -1,6 +1,7 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { Order } from '@app/types';
+import type { Order } from '@app/types';
 
 interface OrdersState {
   orders: Order[];
@@ -15,12 +16,12 @@ const initialState: OrdersState = {
 };
 
 export const fetchOrders = createAsyncThunk('orders/fetchOrders', async () => {
-  const response = await axios.get('/api/orders');
+  const response = await axios.get('/api/orders', { withCredentials: true });
   return response.data;
 });
 
 export const fetchOrderById = createAsyncThunk('orders/fetchOrderById', async (id: number) => {
-  const response = await axios.get(`/api/orders/${id}`);
+  const response = await axios.get(`/api/orders/${id}`, { withCredentials: true });
   return response.data;
 });
 
@@ -29,6 +30,7 @@ export const createOrder = createAsyncThunk('orders/createOrder', async (order: 
     headers: {
       'Content-Type': 'application/json',
     },
+    withCredentials: true,
   });
   return response.data;
 });
@@ -38,12 +40,13 @@ export const updateOrder = createAsyncThunk('orders/updateOrder', async (order: 
     headers: {
       'Content-Type': 'application/json',
     },
+    withCredentials: true,
   });
   return response.data;
 });
 
 export const deleteOrder = createAsyncThunk('orders/deleteOrder', async (id: number) => {
-  await axios.delete(`/api/orders/${id}`);
+  await axios.delete(`/api/orders/${id}`, { withCredentials: true });
   return id;
 });
 

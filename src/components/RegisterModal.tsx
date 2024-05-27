@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '@app/slices/authSlice';
 import '@styles/Modals.css';
-import { RootState, AppDispatch } from '@app/store';
-import { User } from '@app/types';
+import type { RootState, AppDispatch } from '@app/store';
+import type { User } from '@app/types';
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -27,7 +28,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
     }
 
     await dispatch(registerUser({ firstName, lastName, email, password, phoneNumber, role: 'USER' } as User));
-    
+
     setFirstName('');
     setLastName('');
     setEmail('');

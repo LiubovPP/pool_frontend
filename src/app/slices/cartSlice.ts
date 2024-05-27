@@ -1,7 +1,8 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { Cart, CartProduct } from '@app/types';
-import { RootState } from '@app/store';
+import type { Cart, CartProduct } from '@app/types';
+import type { RootState } from '@app/store';
 
 interface CartState {
   cart: Cart | null;
@@ -31,10 +32,10 @@ const initialState: CartState = {
   error: null,
 };
 
-export const fetchCart = createAsyncThunk(
+export const fetchCart = createAsyncThunk<Cart | null, number, { state: RootState; rejectValue: string }>(
   'cart/fetchCart',
-  async (userId: number, { getState, rejectWithValue }) => {
-    const state = getState() as RootState;
+  async (userId, { getState, rejectWithValue }) => {
+    const state = getState();
     if (state.auth.isAuthenticated) {
       try {
         const response = await axios.get(`/api/cart/${userId}`, { withCredentials: true });
@@ -56,10 +57,10 @@ export const fetchCart = createAsyncThunk(
   },
 );
 
-export const addToCart = createAsyncThunk(
+export const addToCart = createAsyncThunk<CartProduct, Omit<CartProduct, 'id'>, { state: RootState; rejectValue: string }>(
   'cart/addToCart',
-  async (product: Omit<CartProduct, 'id'>, { getState, rejectWithValue }) => {
-    const state = getState() as RootState;
+  async (product, { getState, rejectWithValue }) => {
+    const state = getState();
     const isAuthenticated = state.auth.isAuthenticated;
     if (isAuthenticated) {
       try {
@@ -79,15 +80,15 @@ export const addToCart = createAsyncThunk(
         cart.products.push({ id: cart.products.length + 1, ...product });
       }
       saveCartToLocalStorage(cart);
-      return cart;
+      return { id: cart.products.length, ...product };
     }
   },
 );
 
-export const updateCartProduct = createAsyncThunk(
+export const updateCartProduct = createAsyncThunk<CartProduct, CartProduct, { state: RootState; rejectValue: string }>(
   'cart/updateCartProduct',
-  async (cartProduct: CartProduct, { getState, rejectWithValue }) => {
-    const state = getState() as RootState;
+  async (cartProduct, { getState, rejectWithValue }) => {
+    const state = getState();
     const isAuthenticated = state.auth.isAuthenticated;
     if (isAuthenticated) {
       try {
@@ -104,7 +105,7 @@ export const updateCartProduct = createAsyncThunk(
       if (index !== -1) {
         cart.products[index] = cartProduct;
         saveCartToLocalStorage(cart);
-        return cart;
+        return cartProduct;
       } else {
         throw new Error('Товар не найден в корзине');
       }
@@ -112,10 +113,10 @@ export const updateCartProduct = createAsyncThunk(
   },
 );
 
-export const removeFromCart = createAsyncThunk(
+export const removeFromCart = createAsyncThunk<number, number, { state: RootState; rejectValue: string }>(
   'cart/removeFromCart',
-  async (cartProductId: number, { getState, rejectWithValue }) => {
-    const state = getState() as RootState;
+  async (cartProductId, { getState, rejectWithValue }) => {
+    const state = getState();
     const isAuthenticated = state.auth.isAuthenticated;
     if (isAuthenticated) {
       const cartId = state.cart.cart?.id;
@@ -137,53 +138,25 @@ export const removeFromCart = createAsyncThunk(
   },
 );
 
-export const clearCart = createAsyncThunk(
+export const clearCart = createAsyncThunk<void, void, { state: RootState; rejectValue: string }>(
   'cart/clearCart',
   async (_, { getState, rejectWithValue }) => {
-    const state = getState() as RootState;
+    const state = getState();
     const isAuthenticated = state.auth.isAuthenticated;
     if (isAuthenticated) {
       try {
         const cartId = state.cart.cart?.id;
         if (!cartId) throw new Error('Корзина не найдена');
         await axios.delete(`/api/cart/${cartId}`, { withCredentials: true });
-        return cartId;
+        return;
       } catch (error) {
         return rejectWithValue('Ошибка при очистке корзины');
       }
     } else {
       localStorage.removeItem('cart');
-      return -1;
+      return;
     }
   },
-);
-
-export const getCartProductById = createAsyncThunk(
-  'cart/getCartProductById',
-  async ({ cartId, cartProductId }: { cartId: number; cartProductId: number }, { getState, rejectWithValue }) => {
-    const state = getState() as RootState;
-    const isAuthenticated = state.auth.isAuthenticated;
-    if (isAuthenticated) {
-      try {
-        const response = await axios.get(`/api/cart/${cartId}/cart-products/${cartProductId}`, { withCredentials: true });
-        return response.data;
-      } catch (error) {
-        return rejectWithValue('Ошибка при получении информации о товаре в корзине');
-      }
-    } else {
-      const cart = getCartFromLocalStorage();
-      if (cart) {
-        const product = cart.products.find(p => p.id === cartProductId);
-        if (product) {
-          return product;
-        } else {
-          throw new Error('Товар не найден в корзине');
-        }
-      } else {
-        throw new Error('Корзина не найдена');
-      }
-    }
-  }
 );
 
 const cartSlice = createSlice({
@@ -245,26 +218,26 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCart.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.payload as string || 'Ошибка при получении корзины';
       })
-      .addCase(addToCart.fulfilled, (state, action: PayloadAction<CartProduct | Cart>) => {
+      .addCase(addToCart.fulfilled, (state, action: PayloadAction<CartProduct>) => {
         if (state.cart) {
-          const existingProduct = state.cart.products.find(p => p.productId === (action.payload as CartProduct).productId);
+          const existingProduct = state.cart.products.find(p => p.productId === action.payload.productId);
           if (existingProduct) {
-            existingProduct.quantity += (action.payload as CartProduct).quantity;
+            existingProduct.quantity += action.payload.quantity;
           } else {
-            state.cart.products.push(action.payload as CartProduct);
+            state.cart.products.push(action.payload);
           }
           saveCartToLocalStorage(state.cart);
         }
       })
-      .addCase(updateCartProduct.fulfilled, (state, action: PayloadAction<CartProduct | Cart>) => {
+      .addCase(updateCartProduct.fulfilled, (state, action: PayloadAction<CartProduct>) => {
         if (state.cart) {
           const index = state.cart.products.findIndex(
-            (product) => product.id === (action.payload as CartProduct).id,
+            (product) => product.id === action.payload.id,
           );
           if (index !== -1) {
-            state.cart.products[index] = action.payload as CartProduct;
+            state.cart.products[index] = action.payload;
             saveCartToLocalStorage(state.cart);
           }
         }
@@ -280,12 +253,6 @@ const cartSlice = createSlice({
       .addCase(clearCart.fulfilled, (state) => {
         state.cart = null;
         localStorage.removeItem('cart');
-      })
-      .addCase(getCartProductById.fulfilled, (state, action: PayloadAction<CartProduct>) => {
-        // обработать успешное получение продукта
-      })
-      .addCase(getCartProductById.rejected, (state, action) => {
-        state.error = action.payload as string;
       });
   },
 });

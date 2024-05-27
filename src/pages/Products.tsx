@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '@app/store';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { fetchProducts, addProduct, deleteProduct } from '@app/slices/productsSlice';
 import { addToCart, addToLocalCart, fetchCart } from '@app/slices/cartSlice';
-import { Product, CartProduct } from '@app/types';
+import type { Product, CartProduct } from '@app/types';
 import ProductModal from '@components/ProductModal';
 import '@styles/Products.css';
 
 const Products: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const { products, loading, error } = useSelector((state: RootState) => state.products);
-  const { user } = useSelector((state: RootState) => state.auth);
-  const { cart } = useSelector((state: RootState) => state.cart);
+  const dispatch = useAppDispatch();
+  const { products, loading, error } = useAppSelector(state => state.products);
+  const { user, isAuthenticated } = useAppSelector(state => state.auth);
+  const { cart } = useAppSelector(state => state.cart);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({ title: '', category: '', price: 0, imageUrl: '' });
 
   useEffect(() => {
     dispatch(fetchProducts());
-    if (user && user.id) {
+    if (isAuthenticated && user?.id) {
       dispatch(fetchCart(user.id));
     }
-  }, [dispatch, user]);
+  }, [dispatch, isAuthenticated, user]);
 
   const handleAddToCart = (product: Product) => {
-    if (user && user.id) {
+    if (isAuthenticated && user?.id) {
       const cartProduct: Omit<CartProduct, 'id'> = {
         cartId: user.id,
         productId: product.id,

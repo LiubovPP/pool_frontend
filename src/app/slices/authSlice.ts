@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { User, UserRole } from "@app/types";
+import type { User } from "@app/types";
 
 interface AuthState {
   user: User | null;
@@ -25,10 +25,10 @@ export const loginUser = createAsyncThunk(
           "Content-Type": "application/x-www-form-urlencoded",
         },
         withCredentials: true,
-      },
+      }
     );
     return response.data.user;
-  },
+  }
 );
 
 export const registerUser = createAsyncThunk(
@@ -41,7 +41,7 @@ export const registerUser = createAsyncThunk(
       withCredentials: true,
     });
     return response.data;
-  },
+  }
 );
 
 export const logoutUser = createAsyncThunk("auth/logout", async () => {
@@ -49,23 +49,17 @@ export const logoutUser = createAsyncThunk("auth/logout", async () => {
 });
 
 export const fetchCurrentUser = createAsyncThunk("auth/user", async () => {
-  const response = await axios.get("/api/users/profile");
+  const response = await axios.get("/api/users/profile", { withCredentials: true });
   return response.data;
 });
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    logout(state) {
-      state.user = null;
-      state.isAuthenticated = false;
-      localStorage.removeItem("isAuthenticated");
-    },
-  },
+  reducers: {},
   extraReducers: builder => {
     builder
-      .addCase(loginUser.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload;
         state.isAuthenticated = true;
         state.error = null;
@@ -74,7 +68,7 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, state => {
         state.error = "Неверный логин или пароль";
       })
-      .addCase(registerUser.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(registerUser.fulfilled, (state, action) => {
         state.user = action.payload;
         state.isAuthenticated = true;
         state.error = null;
@@ -88,14 +82,11 @@ const authSlice = createSlice({
         state.error = null;
         localStorage.removeItem("isAuthenticated");
       })
-      .addCase(
-        fetchCurrentUser.fulfilled,
-        (state, action: PayloadAction<User>) => {
-          state.user = action.payload;
-          state.isAuthenticated = true;
-          state.error = null;
-        },
-      )
+      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isAuthenticated = true;
+        state.error = null;
+      })
       .addCase(fetchCurrentUser.rejected, state => {
         state.user = null;
         state.isAuthenticated = false;
@@ -105,5 +96,4 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
 export default authSlice.reducer;

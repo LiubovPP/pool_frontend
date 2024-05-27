@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '@app/store';
-import { fetchCart, addToCart, removeFromCart, updateCartProduct, clearCart, updateLocalCartProduct, removeFromLocalCart } from '@app/slices/cartSlice';
-import { CartProduct } from '@app/types';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import { useAppSelector, useAppDispatch } from '@app/hooks'; // Используем типизированные хуки
+import { fetchCart, removeFromCart, updateCartProduct, updateLocalCartProduct, removeFromLocalCart } from '@app/slices/cartSlice';
+import type { CartProduct } from '@app/types';
 import '@styles/Cart.css';
 import LoginModal from '@components/LoginModal';
 import OrderModal from '@components/OrderModal';
 
 const Cart: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const { cart, loading, error } = useSelector((state: RootState) => state.cart);
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+  const dispatch = useAppDispatch();
+  const { cart, loading, error } = useAppSelector((state) => state.cart);
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isOrderModalOpen, setOrderModalOpen] = useState(false);
 
@@ -77,7 +77,6 @@ const Cart: React.FC = () => {
         onClose={() => setLoginModalOpen(false)}
         onRegister={() => {
           setLoginModalOpen(false);
-          
         }}
       />
       <OrderModal

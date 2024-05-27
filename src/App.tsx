@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import type React from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { RootState } from '@app/store';
+import type { RootState } from '@app/store';
 import Header from '@components/Header';
 import Footer from '@components/Footer';
 import Home from '@pages/Home';
@@ -14,6 +15,7 @@ import OrdersPage from '@pages/Orders';
 import '@styles/App.css';
 import { useAppDispatch } from '@app/hooks';
 import { fetchCurrentUser } from '@app/slices/authSlice';
+import ErrorPage from '@pages/ErrorPage';
 
 const App: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -35,6 +37,7 @@ const App: React.FC = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="*" element={<ErrorPage/>} />
           <Route path="/orders" element={<OrdersPage />} />
           {user && user.role === 'ADMIN' && (
             <>

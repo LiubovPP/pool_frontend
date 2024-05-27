@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import type React from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '../app/store';
+import type { RootState, AppDispatch } from '../app/store';
 import { fetchUsers, deleteUser } from '../app/slices/usersSlice';
 
 const AdminUsers: React.FC = () => {

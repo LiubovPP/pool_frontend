@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import type React from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "@app/store";
+import type { RootState, AppDispatch } from "@app/store";
 import { fetchOrders, deleteOrder, updateOrder } from "@app/slices/orderSlice";
 import "@styles/Order.css";
 

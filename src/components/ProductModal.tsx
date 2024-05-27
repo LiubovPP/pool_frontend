@@ -1,8 +1,8 @@
-import React from 'react';
+import type React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, addToLocalCart } from '@app/slices/cartSlice';
-import { RootState, AppDispatch } from '@app/store';
-import { Product, CartProduct } from '@app/types';
+import type { RootState, AppDispatch } from '@app/store';
+import type { Product, CartProduct } from '@app/types';
 import '@styles/Modals.css';
 
 interface ProductModalProps {

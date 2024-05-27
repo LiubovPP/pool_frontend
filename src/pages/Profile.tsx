@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '@app/store';
+import type { RootState, AppDispatch } from '@app/store';
 import { fetchUsers, deleteUser, updateUser } from '@app/slices/usersSlice';
-import { User } from '@app/types';
+import type { User } from '@app/types';
 import '@styles/Profile.css';
 
 const Profile: React.FC = () => {
@@ -27,7 +28,6 @@ const Profile: React.FC = () => {
       setEditingUser(null);
     }
   };
-
   if (!user) {
     return <p>Вы не авторизованы</p>;
   }
