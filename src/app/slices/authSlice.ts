@@ -62,6 +62,7 @@ const authSlice = createSlice({
     builder
       .addCase(loginUser.fulfilled, (state, action) => {
         // state.user = action.payload;
+
         state.isAuthenticated = true;
         state.error = null;
         localStorage.setItem("isAuthenticated", JSON.stringify(true));
