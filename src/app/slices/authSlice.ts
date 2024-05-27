@@ -19,12 +19,13 @@ export const loginUser = createAsyncThunk(
   async (credentials: { username: string; password: string }) => {
     const response = await axios.post(
       "/api/login",
-      new URLSearchParams(credentials),
+      credentials,
       {
+        withCredentials: true,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        withCredentials: true,
+
       }
     );
     return response.data.user;
@@ -60,17 +61,18 @@ const authSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        // state.user = action.payload;
         state.isAuthenticated = true;
         state.error = null;
         localStorage.setItem("isAuthenticated", JSON.stringify(true));
       })
       .addCase(loginUser.rejected, state => {
+        state.isAuthenticated = false;
         state.error = "Неверный логин или пароль";
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-        state.user = action.payload;
-        state.isAuthenticated = true;
+        // state.user = action.payload;
+        // state.isAuthenticated = true;
         state.error = null;
       })
       .addCase(registerUser.rejected, state => {

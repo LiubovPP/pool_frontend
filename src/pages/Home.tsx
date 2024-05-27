@@ -1,10 +1,10 @@
-import type React from 'react';
-import { useSelector } from 'react-redux';
-import type { RootState } from '@app/store';
-import '@styles/Home.css';
+import type React from "react"
+import type { RootState } from "@app/store"
+import "@styles/Home.css"
+import { useAppSelector } from "@app/hooks/hooks"
 
 const Home: React.FC = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user } = useAppSelector((state: RootState) => state.auth)
 
   return (
     <div className="home-container">
@@ -12,7 +12,7 @@ const Home: React.FC = () => {
         Добро пожаловать {user?.firstName} {user?.lastName} !
       </span>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

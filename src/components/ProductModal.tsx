@@ -1,9 +1,9 @@
 import type React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, addToLocalCart } from '@app/slices/cartSlice';
 import type { RootState, AppDispatch } from '@app/store';
 import type { Product, CartProduct } from '@app/types';
 import '@styles/Modals.css';
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -12,9 +12,9 @@ interface ProductModalProps {
 }
 
 const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product }) => {
-  const dispatch: AppDispatch = useDispatch();
-  const { user } = useSelector((state: RootState) => state.auth);
-  const { cart } = useSelector((state: RootState) => state.cart);
+  const dispatch: AppDispatch = useAppDispatch();
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { cart } = useAppSelector((state: RootState) => state.cart);
 
   const handleAddToCart = () => {
     if (user && user.id) {

@@ -1,10 +1,10 @@
 import type React from 'react';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '@app/slices/authSlice';
 import '@styles/Modals.css';
 import type { RootState, AppDispatch } from '@app/store';
 import type { User } from '@app/types';
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -12,14 +12,14 @@ interface RegisterModalProps {
 }
 
 const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch: AppDispatch = useAppDispatch();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const error = useSelector((state: RootState) => state.auth.error);
+  const error = useAppSelector((state: RootState) => state.auth.error);
 
   const handleRegister = async () => {
     if (password !== confirmPassword) {

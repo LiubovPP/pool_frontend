@@ -1,9 +1,10 @@
 import type React from 'react';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+
 import { loginUser } from '@app/slices/authSlice';
 import '@styles/Modals.css';
 import type { RootState, AppDispatch } from '@app/store';
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -12,10 +13,10 @@ interface LoginModalProps {
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch: AppDispatch = useAppDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const error = useSelector((state: RootState) => state.auth.error);
+  const error = useAppSelector((state: RootState) => state.auth.error);
 
   const handleLogin = async () => {
     try {
