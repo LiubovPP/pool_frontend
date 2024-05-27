@@ -1,6 +1,7 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { User } from '@app/types';
+import type { User } from '@app/types';
 
 interface UsersState {
   users: User[];
@@ -15,12 +16,12 @@ const initialState: UsersState = {
 };
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
-  const response = await axios.get('/api/users');
+  const response = await axios.get('/api/users', { withCredentials: true });
   return response.data;
 });
 
 export const deleteUser = createAsyncThunk('users/deleteUser', async (id: number) => {
-  await axios.delete(`/api/users/${id}`);
+  await axios.delete(`/api/users/${id}`, { withCredentials: true });
   return id;
 });
 
@@ -29,6 +30,7 @@ export const updateUser = createAsyncThunk('users/updateUser', async (user: User
     headers: {
       'Content-Type': 'application/json',
     },
+    withCredentials: true,
   });
   return response.data;
 });

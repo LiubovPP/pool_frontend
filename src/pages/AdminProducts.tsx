@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '@app/store';
+import type { RootState, AppDispatch } from '@app/store';
 import { fetchProducts, addProduct, updateProduct } from '@app/slices/productsSlice';
-import { Product } from '@app/types';
+import type { Product } from '@app/types';
 
 const AdminProducts: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();

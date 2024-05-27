@@ -1,6 +1,6 @@
-import React from 'react';
+import type React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '@app/store';
+import type { RootState } from '@app/store';
 import '@styles/Home.css';
 
 const Home: React.FC = () => {

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import type React from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@app/store';
+import type { AppDispatch } from '@app/store';
 import { createOrder } from '@app/slices/orderSlice';
-import { Cart, User, OrderProduct } from '@app/types';
+import type { Cart, User, OrderProduct } from '@app/types';
 import '@styles/Modals.css';
 
 interface OrderModalProps {

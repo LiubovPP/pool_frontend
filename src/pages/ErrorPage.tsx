@@ -1,7 +1,11 @@
-import React from 'react'
+import type React from 'react';
 
-export default function ErrorPage() {
+const ErrorPage: React.FC = () => {
   return (
-    <h2>Запрашиваемая Вами страница не существует :(</h2>
-  )
-}
+    <div>
+      <h2>Запрашиваемая Вами страница не существует :(</h2>
+    </div>
+  );
+};
+
+export default ErrorPage;

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import type React from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { RootState, AppDispatch } from '@app/store';
+import { useAppSelector, useAppDispatch } from '@app/hooks'; // Используем типизированные хуки
 import { logoutUser, fetchCurrentUser } from '@app/slices/authSlice';
-import { clearLocalCart, syncCartWithLocal, fetchCart } from '@app/slices/cartSlice'; 
+import { clearLocalCart, syncCartWithLocal, fetchCart } from '@app/slices/cartSlice';
 import LoginModal from '@components/LoginModal';
 import RegisterModal from '@components/RegisterModal';
 import { FaShoppingCart } from 'react-icons/fa';
@@ -11,21 +11,21 @@ import logo from '@assets/logo.png';
 import '@styles/Header.css';
 
 const Header: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { cart } = useSelector((state: RootState) => state.cart);
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+  const { cart } = useAppSelector((state) => state.cart);
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
 
-  console.log('Header User:', user);
+  // console.log('Header User:', user);
 
   const totalItems = cart?.products.reduce((total, item) => total + item.quantity, 0) || 0;
 
   const handleLogout = async () => {
     try {
       await dispatch(logoutUser()).unwrap();
-      dispatch(clearLocalCart()); 
+      dispatch(clearLocalCart());
       navigate('/');
     } catch (error) {
       console.error('Ошибка выхода', error);
@@ -36,7 +36,7 @@ const Header: React.FC = () => {
     setLoginModalOpen(true);
   };
 
-  const handleSyncCart = async () => {
+  const handleSyncCart = useCallback(async () => {
     if (isAuthenticated) {
       const localCart = JSON.parse(localStorage.getItem('cart') || 'null');
       if (localCart) {
@@ -51,17 +51,24 @@ const Header: React.FC = () => {
         console.error('Ошибка при синхронизации корзины', error);
       }
     }
-  };
+  }, [isAuthenticated, dispatch, user]);
 
   useEffect(() => {
-    handleSyncCart();
-  }, [isAuthenticated]);
+    const syncCart = async () => {
+      try {
+        await handleSyncCart();
+      } catch (error) {
+        console.error('Ошибка при синхронизации корзины', error);
+      }
+    };
+    syncCart();
+  }, [isAuthenticated, handleSyncCart]);
 
   return (
     <header className="header">
       <div className="header-container">
         <div className="brand">
-          <a href="/"><img src={logo} alt="Logo" /></a>
+          <Link to="/"><img src={logo} alt="Logo" /></Link>
         </div>
         <nav className="nav">
           <ul className="nav-list">

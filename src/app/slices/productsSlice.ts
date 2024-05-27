@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { Product } from '@app/types';
+import type { Product } from '@app/types';
 
 interface ProductsState {
   products: Product[];
@@ -15,8 +15,12 @@ const initialState: ProductsState = {
 };
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-  const response = await axios.get('/api/products');
-  return response.data;
+  try {
+    const response = await axios.get('/api/products'); // Без withCredentials
+    return response.data;
+  } catch (error) {
+    throw new Error('Не удалось загрузить продукты');
+  }
 });
 
 export const addProduct = createAsyncThunk(
@@ -26,6 +30,7 @@ export const addProduct = createAsyncThunk(
       headers: {
         'Content-Type': 'application/json',
       },
+      withCredentials: true, // Оставляем для добавления продукта
     });
     return response.data;
   }
@@ -38,13 +43,16 @@ export const updateProduct = createAsyncThunk(
       headers: {
         'Content-Type': 'application/json',
       },
+      withCredentials: true, // Оставляем для обновления продукта
     });
     return response.data;
   }
 );
 
 export const deleteProduct = createAsyncThunk('products/deleteProduct', async (id: number) => {
-  await axios.delete(`/api/products/${id}`);
+  await axios.delete(`/api/products/${id}`, {
+    withCredentials: true, // Оставляем для удаления продукта
+  });
   return id;
 });
 
@@ -58,7 +66,7 @@ const productsSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchProducts.fulfilled, (state, action: PayloadAction<Product[]>) => {
+      .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.products = action.payload;
       })
@@ -66,16 +74,16 @@ const productsSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || 'Не удалось загрузить продукты';
       })
-      .addCase(addProduct.fulfilled, (state, action: PayloadAction<Product>) => {
+      .addCase(addProduct.fulfilled, (state, action) => {
         state.products.push(action.payload);
       })
-      .addCase(updateProduct.fulfilled, (state, action: PayloadAction<Product>) => {
+      .addCase(updateProduct.fulfilled, (state, action) => {
         const index = state.products.findIndex((product) => product.id === action.payload.id);
         if (index !== -1) {
           state.products[index] = action.payload;
         }
       })
-      .addCase(deleteProduct.fulfilled, (state, action: PayloadAction<number>) => {
+      .addCase(deleteProduct.fulfilled, (state, action) => {
         state.products = state.products.filter((product) => product.id !== action.payload);
       });
   },

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '@app/slices/authSlice';
 import '@styles/Modals.css';
-import { RootState, AppDispatch } from '@app/store';
+import type { RootState, AppDispatch } from '@app/store';
 
 interface LoginModalProps {
   isOpen: boolean;
