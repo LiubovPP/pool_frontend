@@ -30,7 +30,7 @@ export const addProduct = createAsyncThunk(
       headers: {
         'Content-Type': 'application/json',
       },
-      withCredentials: true, // Оставляем для добавления продукта
+      withCredentials: true, // для добавления продукта
     });
     return response.data;
   }
@@ -43,7 +43,7 @@ export const updateProduct = createAsyncThunk(
       headers: {
         'Content-Type': 'application/json',
       },
-      withCredentials: true, // Оставляем для обновления продукта
+      withCredentials: true, // для обновления продукта
     });
     return response.data;
   }

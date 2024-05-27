@@ -1,6 +1,6 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
-import { useAppSelector, useAppDispatch } from '@app/hooks'; // Используем типизированные хуки
+import { useAppSelector, useAppDispatch } from '@app/hooks/hooks'; // Используем типизированные хуки
 import { fetchCart, removeFromCart, updateCartProduct, updateLocalCartProduct, removeFromLocalCart } from '@app/slices/cartSlice';
 import type { CartProduct } from '@app/types';
 import '@styles/Cart.css';

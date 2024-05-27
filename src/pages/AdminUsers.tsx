@@ -1,12 +1,12 @@
 import type React from 'react';
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '../app/store';
 import { fetchUsers, deleteUser } from '../app/slices/usersSlice';
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 
 const AdminUsers: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const { users, loading, error } = useSelector((state: RootState) => state.users);
+  const dispatch: AppDispatch = useAppDispatch();
+  const { users, loading, error } = useAppSelector((state: RootState) => state.users);
 
   useEffect(() => {
     dispatch(fetchUsers());

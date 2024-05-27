@@ -1,6 +1,6 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@app/hooks';
+import { useAppDispatch, useAppSelector } from '@app/hooks/hooks';
 import { fetchProducts, addProduct, deleteProduct } from '@app/slices/productsSlice';
 import { addToCart, addToLocalCart, fetchCart } from '@app/slices/cartSlice';
 import type { Product, CartProduct } from '@app/types';

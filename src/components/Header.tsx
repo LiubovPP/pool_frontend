@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '@app/hooks'; // Используем типизированные хуки
+import { useAppSelector, useAppDispatch } from '@app/hooks/hooks'; // Используем типизированные хуки
 import { logoutUser, fetchCurrentUser } from '@app/slices/authSlice';
 import { clearLocalCart, syncCartWithLocal, fetchCart } from '@app/slices/cartSlice';
 import LoginModal from '@components/LoginModal';
