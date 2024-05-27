@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from '@app/hooks/hooks'; // Используем типизированные хуки
+import { useAppSelector, useAppDispatch } from '@app/hooks/hooks';
 import { logoutUser, fetchCurrentUser } from '@app/slices/authSlice';
 import { clearLocalCart, syncCartWithLocal, fetchCart } from '@app/slices/cartSlice';
 import LoginModal from '@components/LoginModal';
@@ -17,8 +17,6 @@ const Header: React.FC = () => {
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
-
-  // console.log('Header User:', user);
 
   const totalItems = cart?.products.reduce((total, item) => total + item.quantity, 0) || 0;
 

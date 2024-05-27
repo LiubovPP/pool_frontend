@@ -38,7 +38,7 @@ export const fetchCart = createAsyncThunk<Cart | null, number, { state: RootStat
     const state = getState()
     if (state.auth.isAuthenticated) {
       try {
-        const response = await axios.post(`/api/cart`,  { withCredentials: true })
+        const response = await axios.post(`/api/cart`, { withCredentials: true })
         return response.data
       } catch (createError) {
         return rejectWithValue("Ошибка при создании корзины")
