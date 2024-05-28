@@ -1,8 +1,16 @@
+
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '@app/slices/authSlice';
 import '@styles/Modals.css';
 import { RootState, AppDispatch } from '@app/store';
+import React from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { loginUser } from '@app/slices/authSlice';
+import '@styles/Modals.css';
+import { useAppDispatch, useAppSelector } from '@app/hooks/hooks';
+import { RootState } from '@app/store';
+development
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -11,11 +19,15 @@ interface LoginModalProps {
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) => {
+bal_ser
   const dispatch: AppDispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const error = useSelector((state: RootState) => state.auth.error);
+  const dispatch = useAppDispatch();
+  const error = useAppSelector((state: RootState) => state.auth.error);
+  development
 
   const [errors, setErrors] = useState({
     username: '',
@@ -78,6 +90,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) 
 
   return (
     <div className="modal">
+bal_ser
       <h2>Вход</h2>
       {error && <p className="error">{error}</p>}
       <input
@@ -104,6 +117,32 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) 
       <button onClick={handleLogin}>Войти</button>
       <button onClick={onRegister}>Регистрация</button>
       <button onClick={handleClose}>Закрыть</button>
+      <div className="modal-content">
+        <h2>Вход</h2>
+        {error && <p className="error">{error}</p>}
+        <Formik
+          initialValues={{ username: '', password: '' }}
+          validate={validate}
+          onSubmit={handleLogin}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <div>
+                <Field type="text" name="username" placeholder="Имя пользователя" autoComplete="username" />
+                <ErrorMessage name="username" component="div" className="error" />
+              </div>
+              <div>
+                <Field type="password" name="password" placeholder="Пароль" autoComplete="current-password" />
+                <ErrorMessage name="password" component="div" className="error" />
+              </div>
+              <button type="submit" disabled={isSubmitting}>Войти</button>
+              <button type="button" onClick={onRegister}>Регистрация</button>
+              <button type="button" onClick={onClose}>Закрыть</button>
+            </Form>
+          )}
+        </Formik>
+      </div>
+
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import type React from "react"
 import AdminProducts from "@pages/AdminProducts"
 
+
 const ErrorPage: React.FC = () => {
   return (
     <div>
@@ -10,3 +11,4 @@ const ErrorPage: React.FC = () => {
 }
 export default AdminProducts;
 
+export default ErrorPage;

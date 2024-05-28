@@ -1,7 +1,14 @@
+
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '@app/slices/authSlice';
 import '@styles/Modals.css';
+import React from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { registerUser } from '@app/slices/authSlice';
+import '@styles/Modals.css';
+import { useAppDispatch, useAppSelector } from '@app/hooks/hooks';
+
 import { RootState, AppDispatch } from '@app/store';
 import { User } from '@app/types';
 
@@ -80,6 +87,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="modal">
+bal_ser
       <h2>Регистрация</h2>
       {error && <p className="error">{error}</p>}
       <input
@@ -141,6 +149,53 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
       {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
       <button onClick={handleRegister} disabled={Object.values(errors).some((error) => error !== '')}>Регистрация</button>
       <button onClick={handleClose}>Закрыть</button>
+      <div className="modal-content">
+        <h2>Регистрация</h2>
+        {error && <p className="error">{error}</p>}
+        <Formik
+          initialValues={{
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            phoneNumber: '',
+          }}
+          validate={validate}
+          onSubmit={handleRegister}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <div>
+                <Field type="text" name="firstName" placeholder="Имя" autoComplete="given-name" />
+                <ErrorMessage name="firstName" component="div" className="error" />
+              </div>
+              <div>
+                <Field type="text" name="lastName" placeholder="Фамилия" autoComplete="family-name" />
+                <ErrorMessage name="lastName" component="div" className="error" />
+              </div>
+              <div>
+                <Field type="email" name="email" placeholder="Email" autoComplete="email" />
+                <ErrorMessage name="email" component="div" className="error" />
+              </div>
+              <div>
+                <Field type="password" name="password" placeholder="Пароль" autoComplete="new-password" />
+                <ErrorMessage name="password" component="div" className="error" />
+              </div>
+              <div>
+                <Field type="password" name="confirmPassword" placeholder="Подтвердите пароль" autoComplete="new-password" />
+                <ErrorMessage name="confirmPassword" component="div" className="error" />
+              </div>
+              <div>
+                <Field type="text" name="phoneNumber" placeholder="Телефон" autoComplete="tel" />
+                <ErrorMessage name="phoneNumber" component="div" className="error" />
+              </div>
+              <button type="submit" disabled={isSubmitting}>Регистрация</button>
+              <button type="button" onClick={onClose}>Закрыть</button>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </div>
   );
 };
