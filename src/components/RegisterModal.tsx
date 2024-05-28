@@ -1,10 +1,10 @@
-import type React from 'react';
+import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { registerUser } from '@app/slices/authSlice';
 import '@styles/Modals.css';
-import type { RootState, AppDispatch } from '@app/store';
-import { useAppDispatch, useAppSelector } from "@app/hooks/hooks";
-import type { User } from '@app/types';
+import { useAppDispatch, useAppSelector } from '@app/hooks/hooks';
+import { RootState, AppDispatch } from '@app/store';
+import { User } from '@app/types';
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -71,51 +71,53 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="modal">
-      <h2>Регистрация</h2>
-      {error && <p className="error">{error}</p>}
-      <Formik
-        initialValues={{
-          firstName: '',
-          lastName: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-          phoneNumber: '',
-        }}
-        validate={validate}
-        onSubmit={handleRegister}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <div>
-              <ErrorMessage name="firstName" component="div" className="error" />
-              <Field type="text" name="firstName" placeholder="Имя" />
-            </div>
-            <div>
-              <ErrorMessage name="lastName" component="div" className="error" />
-              <Field type="text" name="lastName" placeholder="Фамилия" />
-            </div>
-            <div>
-              <ErrorMessage name="email" component="div" className="error" />
-              <Field type="email" name="email" placeholder="Email" />
-            </div>
-            <div>
-              <ErrorMessage name="password" component="div" className="error" />
-              <Field type="password" name="password" placeholder="Пароль" />
-            </div>
-            <div>
-              <ErrorMessage name="confirmPassword" component="div" className="error" />
-              <Field type="password" name="confirmPassword" placeholder="Подтвердите пароль" />
-            </div>
-            <div>
-              <ErrorMessage name="phoneNumber" component="div" className="error" />
-              <Field type="text" name="phoneNumber" placeholder="Телефон" />
-            </div>
-            <button type="submit" disabled={isSubmitting}>Регистрация</button>
-            <button type="button" onClick={onClose}>Закрыть</button>
-          </Form>
-        )}
-      </Formik>
+      <div className="modal-content">
+        <h2>Регистрация</h2>
+        {error && <p className="error">{error}</p>}
+        <Formik
+          initialValues={{
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            phoneNumber: '',
+          }}
+          validate={validate}
+          onSubmit={handleRegister}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <div>
+                <Field type="text" name="firstName" placeholder="Имя" autoComplete="given-name" />
+                <ErrorMessage name="firstName" component="div" className="error" />
+              </div>
+              <div>
+                <Field type="text" name="lastName" placeholder="Фамилия" autoComplete="family-name" />
+                <ErrorMessage name="lastName" component="div" className="error" />
+              </div>
+              <div>
+                <Field type="email" name="email" placeholder="Email" autoComplete="email" />
+                <ErrorMessage name="email" component="div" className="error" />
+              </div>
+              <div>
+                <Field type="password" name="password" placeholder="Пароль" autoComplete="new-password" />
+                <ErrorMessage name="password" component="div" className="error" />
+              </div>
+              <div>
+                <Field type="password" name="confirmPassword" placeholder="Подтвердите пароль" autoComplete="new-password" />
+                <ErrorMessage name="confirmPassword" component="div" className="error" />
+              </div>
+              <div>
+                <Field type="text" name="phoneNumber" placeholder="Телефон" autoComplete="tel" />
+                <ErrorMessage name="phoneNumber" component="div" className="error" />
+              </div>
+              <button type="submit" disabled={isSubmitting}>Регистрация</button>
+              <button type="button" onClick={onClose}>Закрыть</button>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </div>
   );
 };

@@ -1,9 +1,9 @@
-import type React from 'react';
+import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { loginUser } from '@app/slices/authSlice';
 import '@styles/Modals.css';
-import { useAppDispatch, useAppSelector } from "@app/hooks/hooks";
-import type { RootState, AppDispatch } from '@app/store';
+import { useAppDispatch, useAppSelector } from '@app/hooks/hooks';
+import { RootState } from '@app/store';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ interface LoginModalProps {
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) => {
-  const dispatch: AppDispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const error = useAppSelector((state: RootState) => state.auth.error);
 
   const validate = (values: { username: string; password: string }) => {
@@ -39,29 +39,31 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) 
 
   return (
     <div className="modal">
-      <h2>Вход</h2>
-      {error && <p className="error">{error}</p>}
-      <Formik
-        initialValues={{ username: '', password: '' }}
-        validate={validate}
-        onSubmit={handleLogin}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <div>
-              <Field type="text" name="username" placeholder="Имя пользователя" />
-              <ErrorMessage name="username" component="div" className="error" />
-            </div>
-            <div>
-              <Field type="password" name="password" placeholder="Пароль" />
-              <ErrorMessage name="password" component="div" className="error" />
-            </div>
-            <button type="submit" disabled={isSubmitting}>Войти</button>
-            <button type="button" onClick={onRegister}>Регистрация</button>
-            <button type="button" onClick={onClose}>Закрыть</button>
-          </Form>
-        )}
-      </Formik>
+      <div className="modal-content">
+        <h2>Вход</h2>
+        {error && <p className="error">{error}</p>}
+        <Formik
+          initialValues={{ username: '', password: '' }}
+          validate={validate}
+          onSubmit={handleLogin}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <div>
+                <Field type="text" name="username" placeholder="Имя пользователя" autoComplete="username" />
+                <ErrorMessage name="username" component="div" className="error" />
+              </div>
+              <div>
+                <Field type="password" name="password" placeholder="Пароль" autoComplete="current-password" />
+                <ErrorMessage name="password" component="div" className="error" />
+              </div>
+              <button type="submit" disabled={isSubmitting}>Войти</button>
+              <button type="button" onClick={onRegister}>Регистрация</button>
+              <button type="button" onClick={onClose}>Закрыть</button>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </div>
   );
 };
