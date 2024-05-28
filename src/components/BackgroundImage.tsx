@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import homeBackground from '@assets/head-d.png';
+import homeBackground from '@assets/back.png';
 import poolsBackground from '@assets/head-d.png';
 import hamamsBackground from '@assets/hamam.png';
 import saunasBackground from '@assets/saynabg.png';
@@ -13,7 +13,7 @@ const BackgroundImage: React.FC = () => {
     const backgroundImageElement = document.querySelector('.background-image') as HTMLElement;
 
     if (backgroundImageElement) {
-      console.log(`Current path: ${location.pathname}`);
+      console.log(`Текущий путь: ${location.pathname}`);
       switch (location.pathname) {
         case '/':
           backgroundImageElement.style.backgroundImage = `url(${homeBackground})`;
@@ -31,9 +31,9 @@ const BackgroundImage: React.FC = () => {
           backgroundImageElement.style.backgroundImage = 'none';
           break;
       }
-      console.log(`Background image set to: ${backgroundImageElement.style.backgroundImage}`);
+      console.log(`Фон установлен: ${backgroundImageElement.style.backgroundImage}`);
     } else {
-      console.error('Background image element not found');
+      console.error('Элемент с фоном не найден');
     }
   }, [location.pathname]);
 
