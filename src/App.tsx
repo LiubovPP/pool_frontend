@@ -12,8 +12,8 @@ import OrdersPage from "@pages/Orders";
 import HamamyPage from "@pages/HamamyPage"; // Импортируем страницу Хамамы
 import { useAppDispatch, useAppSelector } from "@app/hooks/hooks";
 import { fetchCurrentUser } from "@app/slices/authSlice";
-/*import ErrorPage from "@pages/ErrorPage";*/
-import BackgroundImage from '@components/BackgroundImage';
+import ErrorPage from "@pages/ErrorPage";
+import  BackgroundImage from '@components/BackgroundImage';
 import "@styles/App.css";
 
 const App: React.FC = () => {
@@ -44,7 +44,7 @@ const App: React.FC = () => {
               <Route path="/admin/products" element={<AdminProducts />} />
             </>
           )}
-          {/* <Route path="*" element={<ErrorPage />} /> */}
+          { <Route path="*" element={<ErrorPage />} /> }
         </Routes>
       </main>
       <Footer />
