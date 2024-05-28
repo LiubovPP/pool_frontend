@@ -1,6 +1,6 @@
 import type React from "react";
 import { useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Header from "@components/Header";
 import Footer from "@components/Footer";
 import Home from "@pages/Home";
@@ -12,9 +12,10 @@ import AdminProducts from "@pages/AdminProducts";
 import OrdersPage from "@pages/Orders";
 import { useAppDispatch, useAppSelector } from "@app/hooks/hooks";
 import { fetchCurrentUser } from "@app/slices/authSlice";
-import ErrorPage from "@pages/ErrorPage";
+
 import BackgroundImage from '@components/BackgroundImage';
 import "@styles/App.css";
+import ErrorPage from "@pages/ErrorPage"
 
 const App: React.FC = () => {
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
@@ -36,8 +37,8 @@ const App: React.FC = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="*" element={<ErrorPage />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="*" element={<ErrorPage />} />
           {user && user.role === "ADMIN" && (
             <>
               <Route path="/admin/users" element={<AdminUsers />} />
