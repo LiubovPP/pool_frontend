@@ -60,10 +60,18 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) 
 
     try {
       await dispatch(loginUser({ username, password })).unwrap();
-      onClose();
+      handleClose();
     } catch (error) {
       console.error('Ошибка входа', error);
     }
+  };
+
+  const handleClose = () => {
+    setUsername('');
+    setPassword('');
+    setPhoneNumber('');
+    setErrors({ username: '', password: '', phoneNumber: '' });
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -95,7 +103,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) 
       {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
       <button onClick={handleLogin}>Войти</button>
       <button onClick={onRegister}>Регистрация</button>
-      <button onClick={() => { onClose(); setErrors({ username: '', password: '', phoneNumber: '' }); }}>Закрыть</button>
+      <button onClick={handleClose}>Закрыть</button>
     </div>
   );
 };
