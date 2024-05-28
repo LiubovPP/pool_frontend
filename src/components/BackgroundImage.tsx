@@ -18,7 +18,7 @@ const BackgroundImage: React.FC = () => {
         case '/':
           backgroundImageElement.style.backgroundImage = `url(${homeBackground})`;
           break;
-        case '/pools':
+        case '/products':
           backgroundImageElement.style.backgroundImage = `url(${poolsBackground})`;
           break;
         case '/hamamy':
@@ -32,6 +32,8 @@ const BackgroundImage: React.FC = () => {
           break;
       }
       console.log(`Background image set to: ${backgroundImageElement.style.backgroundImage}`);
+    } else {
+      console.error('Background image element not found');
     }
   }, [location.pathname]);
 
