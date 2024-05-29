@@ -35,8 +35,8 @@ a:hover {
 
 /* для кнопок */
 .button {
-  background-color: #007bff;
-  color: white;
+  /*background-color: #007bff;*/
+  /*color: white;*/
   border: none;
   padding: 10px 20px;
   cursor: pointer;
