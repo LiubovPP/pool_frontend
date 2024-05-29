@@ -12,7 +12,7 @@
 
 .hamam-content {
   margin: 530px;
-  left: -450px;
+  padding: 20px;
   position: fixed;
   z-index: 2;
   text-align: center;
