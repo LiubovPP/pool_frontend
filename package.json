@@ -1,12 +1,12 @@
 {
-  "name": "shop-app",
+  "name": "pools-app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "start": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "format": "prettier --write .",
@@ -17,12 +17,14 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
     "axios": "^1.7.2",
+    "formik": "^2.4.6",
     "history": "^5.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.2.1",
     "react-redux": "^9.1.0",
-    "react-router-dom": "^6.23.1"
+    "react-router-dom": "^6.23.1",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.3.4",

@@ -1,28 +1,29 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "@app/store";
-import { fetchOrders, deleteOrder, updateOrder } from "@app/slices/orderSlice";
-import "@styles/Order.css";
+import type React from "react"
+import { useEffect } from "react"
+import type { RootState, AppDispatch } from "@app/store"
+import { fetchOrders, deleteOrder, updateOrder } from "@app/slices/orderSlice"
+import "@styles/Order.css"
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 
 const OrdersPage: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const { orders, loading, error } = useSelector((state: RootState) => state.orders);
+  const dispatch: AppDispatch = useAppDispatch()
+  const { orders, loading, error } = useAppSelector((state: RootState) => state.orders)
 
   useEffect(() => {
-    dispatch(fetchOrders());
-  }, [dispatch]);
+    dispatch(fetchOrders())
+  }, [dispatch])
 
   const handleDeleteOrder = (id: number) => {
-    dispatch(deleteOrder(id));
-  };
+    dispatch(deleteOrder(id))
+  }
 
   const handleUpdateOrder = (id: number) => {
     // Обработка обновления заказа (пример)
-    dispatch(updateOrder({ id, userId: 1, summa: 100, itemsCount: 1, date: new Date().toISOString(), products: [] }));
-  };
+    dispatch(updateOrder({ id, userId: 1, summa: 100, itemsCount: 1, date: new Date().toISOString(), products: [] }))
+  }
 
-  if (loading) return <p>Загрузка...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p>Загрузка...</p>
+  if (error) return <p>{error}</p>
 
   return (
     <div className="orders-page">
@@ -42,7 +43,7 @@ const OrdersPage: React.FC = () => {
         </div>
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default OrdersPage;
+export default OrdersPage

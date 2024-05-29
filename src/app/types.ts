@@ -2,17 +2,14 @@ import { UserRole } from "./enums"
 
 
 export interface User {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  role: string;
-  status?: "CONFIRMED" | "PENDING";
-}
-
-export interface UserWithPassword extends User {
-  password: string;
+  id: number
+  firstName: string
+  lastName: string
+  email: string
+  role: UserRole
+  phoneNumber: string
+  password?: string
+  status?: "CONFIRMED" | "PENDING"
 }
 
 export interface Product {
@@ -44,12 +41,13 @@ export interface CartProduct {
   cartId: number;
   productId: number;
   quantity: number;
-  price: number; 
+  price: number;
 }
 
 export interface Cart {
   id: number
   products: CartProduct[]
 }
+
 export { UserRole }
 

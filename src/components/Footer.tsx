@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { FaFacebook, FaInstagram, FaLinkedin, FaVk, FaOdnoklassniki, FaWhatsapp } from 'react-icons/fa';
 import logo from '@assets/logo.png';
 import '@styles/Footer.css';

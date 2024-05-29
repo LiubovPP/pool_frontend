@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginUser, clearLoginError } from '@app/slices/authSlice';
+import React from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { loginUser } from '@app/slices/authSlice';
 import '@styles/Modals.css';
-import { RootState, AppDispatch } from '@app/store';
+import { useAppDispatch, useAppSelector } from '@app/hooks/hooks';
+import { RootState } from '@app/store';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -11,98 +12,99 @@ interface LoginModalProps {
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) => {
-  const dispatch: AppDispatch = useDispatch();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const { error, validationErrors } = useSelector((state: RootState) => state.auth);
+  const dispatch = useAppDispatch();
+  const error = useAppSelector((state: RootState) => state.auth.error);
 
-  useEffect(() => {
-    if (isOpen) {
-      dispatch(clearLoginError());
-      setErrors({});
+  const validate = (values: { username: string; password: string }) => {
+    const errors: { username?: string; password?: string } = {};
+    if (!values.username) {
+      errors.username = 'Имя пользователя обязательно';
+    } else if (values.username.length < 2) {
+      errors.username = 'Имя пользователя должно быть не менее 2 символов';
     }
-  }, [isOpen, dispatch]);
 
-  const handleLogin = async () => {
-    const validationErrors = validateLogin({ username, password });
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
+    if (!values.password) {
+      errors.password = 'Пароль обязателен';
+    } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{6,}$/.test(values.password)) {
+      errors.password = 'Пароль должен содержать не менее одной заглавной и строчной буквы, одного спецсимвола и быть длиной не менее 6 символов';
     }
-    await dispatch(loginUser({ username, password }));
-    onClose();
+
+    return errors;
   };
 
-  const validateField = (name: string, value: string) => {
-    let error = '';
-    if (name === 'username') {
-      if (value.trim().length < 3) {
-        error = 'Имя пользователя должно содержать минимум 3 символа';
-      }
-    } else if (name === 'password') {
-      if (value.length < 8) {
-        error = 'Пароль должен содержать минимум 8 символов';
-      }
-    }
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
-  };
-
-  const handleInputChange = (name: string, value: string) => {
-    validateField(name, value);
-    if (name === 'username') {
-      setUsername(value);
-    } else if (name === 'password') {
-      setPassword(value);
+  const handleLogin = async (values: { username: string; password: string }, { resetForm }: { resetForm: () => void }) => {
+    try {
+      await dispatch(loginUser(values)).unwrap();
+      onClose();
+      resetForm();
+    } catch (error) {
+      console.error('Ошибка входа', error);
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="modal">
-      <h2>Вход</h2>
-      {error && <p className="error">{error}</p>}
-      <div className="input-group">
-        <label htmlFor="username">Имя пользователя</label>
-        <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={(e) => handleInputChange('username', e.target.value)}
-          placeholder="Имя пользователя"
-          style={{ borderColor: errors.username ? 'red' : 'initial' }}
-        />
-        {errors.username && <div style={{ color: 'red' }}>{errors.username}</div>}
+      <div className="modal">
+        <div className="modal-content">
+          <h2>Вход</h2>
+          {error && <p className="error">{error}</p>}
+          <Formik
+              initialValues={{ username: '', password: '' }}
+              validate={validate}
+              onSubmit={handleLogin}
+              validateOnChange={false}
+              validateOnBlur={false}
+          >
+            {({ isSubmitting, setFieldValue, setFieldTouched, values, errors, touched, setErrors, setTouched }) => (
+                <Form>
+                  <div>
+                    <Field
+                        type="text"
+                        name="username"
+                        placeholder="Имя пользователя"
+                        autoComplete="username"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          const value = e.target.value;
+                          setFieldValue('username', value);
+                          const validationErrors = validate({ ...values, username: value });
+                          setErrors(validationErrors);
+                          setTouched({ ...touched, username: true });
+                        }}
+                        value={values.username}
+                    />
+                    {errors.username && touched.username && (
+                        <div className="error">{errors.username}</div>
+                    )}
+                  </div>
+                  <div>
+                    <Field
+                        type="password"
+                        name="password"
+                        placeholder="Пароль"
+                        autoComplete="current-password"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          const value = e.target.value;
+                          setFieldValue('password', value);
+                          const validationErrors = validate({ ...values, password: value });
+                          setErrors(validationErrors);
+                          setTouched({ ...touched, password: true });
+                        }}
+                        value={values.password}
+                    />
+                    {errors.password && touched.password && (
+                        <div className="error">{errors.password}</div>
+                    )}
+                  </div>
+                  <button type="submit" disabled={isSubmitting}>Войти</button>
+                  <button type="button" onClick={onRegister}>Регистрация</button>
+                  <button type="button" onClick={() => { onClose(); }}>Закрыть</button>
+                </Form>
+            )}
+          </Formik>
+        </div>
       </div>
-      <div className="input-group">
-        <label htmlFor="password">Пароль</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => handleInputChange('password', e.target.value)}
-          placeholder="Пароль"
-          style={{ borderColor: errors.password ? 'red' : 'initial' }}
-        />
-        {errors.password && <div style={{ color: 'red' }}>{errors.password}</div>}
-      </div>
-      <button onClick={handleLogin}>Войти</button>
-      <button className="secondary-button" onClick={onRegister}>Регистрация</button>
-      <button className="secondary-button" onClick={onClose}>Закрыть</button>
-    </div>
   );
-};
-
-const validateLogin = (credentials: { username: string; password: string }) => {
-  const errors: { [key: string]: string } = {};
-  if (credentials.username.trim().length < 3) {
-    errors.username = 'Имя пользователя должно содержать минимум 3 символа';
-  }
-  if (credentials.password.length < 8) {
-    errors.password = 'Пароль должен содержать минимум 8 символов';
-  }
-  return errors;
 };
 
 export default LoginModal;

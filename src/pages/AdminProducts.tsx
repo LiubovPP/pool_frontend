@@ -1,31 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '@app/store';
-import { fetchProducts, addProduct, updateProduct } from '@app/slices/productsSlice';
-import { Product } from '@app/types';
+import type React from "react"
+import { useEffect, useState } from "react"
+import type { RootState, AppDispatch } from "@app/store"
+import { fetchProducts, addProduct, updateProduct } from "@app/slices/productsSlice"
+import type { Product } from "@app/types"
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 
 const AdminProducts: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const { products, loading, error } = useSelector((state: RootState) => state.products);
-  const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({ title: '', category: '', price: 0, imageUrl: '' });
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const dispatch: AppDispatch = useAppDispatch()
+  const { products, loading, error } = useAppSelector((state: RootState) => state.products)
+  const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
+    title: "",
+    category: "",
+    price: 0,
+    imageUrl: ""
+  })
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    dispatch(fetchProducts())
+  }, [dispatch])
 
   const handleAddProduct = () => {
-    dispatch(addProduct(newProduct));
-    setNewProduct({ title: '', category: '', price: 0, imageUrl: '' });
-  };
+    dispatch(addProduct(newProduct))
+    setNewProduct({ title: "", category: "", price: 0, imageUrl: "" })
+  }
 
   const handleUpdateProduct = (product: Product) => {
-    dispatch(updateProduct(product));
-    setEditingProduct(null);
-  };
+    dispatch(updateProduct(product))
+    setEditingProduct(null)
+  }
 
-  if (loading) return <p>Загрузка...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p>Загрузка...</p>
+  if (error) return <p>{error}</p>
 
   return (
     <div>
@@ -90,7 +96,7 @@ const AdminProducts: React.FC = () => {
         <button onClick={handleAddProduct}>Добавить продукт</button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AdminProducts;
+export default AdminProducts

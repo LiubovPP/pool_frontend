@@ -2,13 +2,10 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
-      "@app/*": ["app/*"],
-      "@components/*": ["components/*"],
       "@pages/*": ["pages/*"],
-      "@styles/*": ["styles/*"],
-      "@assets/*": ["assets/*"],
-      "@utils/*": ["utils/*"]
-      // "@types/*": ["types/*"]
+      "@components/*": ["components/*"],
+      "@app/*": ["app/*"],
+      "@styles/*": ["styles/*"]
     },
     "types": ["vitest/globals"],
     "target": "ESNext",
@@ -26,5 +23,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

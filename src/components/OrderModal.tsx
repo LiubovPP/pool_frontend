@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@app/store';
+import type React from 'react';
+import { useState, useEffect } from 'react';
+import type { AppDispatch } from '@app/store';
 import { createOrder } from '@app/slices/orderSlice';
-import { Cart, User, OrderProduct } from '@app/types';
+import type { Cart, User, OrderProduct } from '@app/types';
 import '@styles/Modals.css';
+import { useAppDispatch } from "@app/hooks/hooks"
 
 interface OrderModalProps {
   isOpen: boolean;
@@ -14,7 +15,7 @@ interface OrderModalProps {
 }
 
 const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, cart, user, onOrderSuccess }) => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch: AppDispatch = useAppDispatch();
   const [summa, setSumma] = useState<number>(0);
 
   useEffect(() => {

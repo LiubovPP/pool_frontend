@@ -1,9 +1,9 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, addToLocalCart } from '@app/slices/cartSlice';
-import { RootState, AppDispatch } from '@app/store';
-import { Product, CartProduct } from '@app/types';
+import type { RootState, AppDispatch } from '@app/store';
+import type { Product, CartProduct } from '@app/types';
 import '@styles/Modals.css';
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks";
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -12,9 +12,9 @@ interface ProductModalProps {
 }
 
 const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product }) => {
-  const dispatch: AppDispatch = useDispatch();
-  const { user } = useSelector((state: RootState) => state.auth);
-  const { cart } = useSelector((state: RootState) => state.cart);
+  const dispatch: AppDispatch = useAppDispatch();
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { cart } = useAppSelector((state: RootState) => state.cart);
 
   const handleAddToCart = () => {
     if (user && user.id) {
@@ -51,14 +51,13 @@ const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, product })
   if (!isOpen) return null;
 
   return (
-    <div className="modal">
-      <div className="modal-content">
+    <div className="modal" onClick={onClose}>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
         <h2>{product.title}</h2>
         <img src={product.imageUrl} alt={product.title} className="product-image-modal" />
-        <p>Описание: {product.category}</p>
+        <p>Категория: {product.category}</p>
         <p>Цена: {product.price} руб.</p>
         <button onClick={handleAddToCart}>Добавить в корзину</button>
-        <button onClick={onClose}>Закрыть</button>
       </div>
     </div>
   );
