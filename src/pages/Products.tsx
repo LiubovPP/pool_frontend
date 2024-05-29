@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@app/hooks/hooks";
-import { fetchProducts, addProduct, deleteProduct } from "@app/slices/productsSlice";
+import { fetchProducts, addProduct, deleteProduct, updateProduct } from "@app/slices/productsSlice";
 import { addToCart, addToLocalCart, fetchCart } from "@app/slices/cartSlice";
 import type { Product, CartProduct } from "@app/types";
-import ProductModal from "@components/ProductModal";
 import "@styles/Products.css";
 
 const Products: React.FC = () => {
@@ -11,7 +10,6 @@ const Products: React.FC = () => {
   const { products, loading, error } = useAppSelector(state => state.products);
   const { user, isAuthenticated } = useAppSelector(state => state.auth);
   const { cart } = useAppSelector(state => state.cart);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
     title: "",
     category: "",
@@ -55,28 +53,38 @@ const Products: React.FC = () => {
     setNewProduct({ title: "", category: "", price: 0, imageUrl: "" });
   };
 
+  const handleUpdateProduct = (product: Product) => {
+    dispatch(updateProduct(product));
+  };
+
   return (
     <div>
       <h1>Продукты</h1>
       <div className="products-grid">
         {products.map((product) => (
-          <div key={product.id} className="product-card" onMouseEnter={() => setSelectedProduct(product)} onMouseLeave={() => setSelectedProduct(null)}>
+          <div key={product.id} className="product-card">
             <img src={product.imageUrl} alt={product.title} className="product-image" />
             <div className="product-details">
               <span className="product-title">{product.title}</span>
-              <span className="product-price">{product.price} руб.</span>
+              <span className="product-category">Категория: {product.category}</span>
+              <span className="product-price">Цена: {product.price} руб.</span>
               <button onClick={(e) => {
                 e.stopPropagation();
                 handleAddToCart(product);
               }}>Добавить в корзину</button>
               {user?.role === "ADMIN" && (
-                <button onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteProduct(product.id);
-                }}>Удалить продукт</button>
+                <>
+                  <button onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteProduct(product.id);
+                  }}>Удалить продукт</button>
+                  <button onClick={(e) => {
+                    e.stopPropagation();
+                    handleUpdateProduct(product);
+                  }}>Изменить продукт</button>
+                </>
               )}
             </div>
-            {selectedProduct?.id === product.id && <ProductModal isOpen={true} onClose={() => setSelectedProduct(null)} product={product} />}
           </div>
         ))}
       </div>
@@ -93,7 +101,7 @@ const Products: React.FC = () => {
             type="text"
             value={newProduct.category}
             onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-            placeholder="Описание"
+            placeholder="Категория"
           />
           <input
             type="number"

@@ -5,7 +5,8 @@
       "@pages/*": ["pages/*"],
       "@components/*": ["components/*"],
       "@app/*": ["app/*"],
-      "@styles/*": ["styles/*"]
+      "@styles/*": ["styles/*"],
+      "@assets/*": ["assets/*"]
     },
     "types": ["vitest/globals"],
     "target": "ESNext",
