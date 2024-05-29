@@ -15,6 +15,8 @@ import '@styles/App.css';
 import { useAppDispatch } from '@app/hooks';
 import { fetchCurrentUser } from '@app/slices/authSlice';
 import ErrorPage from '@pages/ErrorPage';
+import Maintanance from '@pages/Maintanance';
+import Composite from '@pages/Composite';
 
 const App: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -36,11 +38,12 @@ const App: React.FC = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
-<<<<<<< sergik_dev
           <Route path="*" element={<ErrorPage/>} />
-=======
           <Route path="/orders" element={<OrdersPage />} />
->>>>>>> development
+          <Route path="/maintanance" element={<Maintanance />} />
+          <Route path="/composite" element={<Composite />} />
+
+
           {user && user.role === 'ADMIN' && (
             <>
               <Route path="/admin/users" element={<AdminUsers />} />

@@ -9,6 +9,7 @@ import RegisterModal from '@components/RegisterModal';
 import { FaShoppingCart } from 'react-icons/fa';
 import logo from '@assets/logo.png';
 import '@styles/Header.css';
+import Dropdown from './Dropdown';
 
 const Header: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -17,6 +18,7 @@ const Header: React.FC = () => {
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
+ 
 
   console.log('Header User:', user);
 
@@ -66,7 +68,7 @@ const Header: React.FC = () => {
         <nav className="nav">
           <ul className="nav-list">
             <li>
-              <Link to="/pools/">Бассейны</Link>
+              <Link to="/pools/"><Dropdown/></Link>
             </li>
             <li>
               <Link to="/hamamy/">Хамамы</Link>
