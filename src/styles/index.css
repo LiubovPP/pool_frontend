@@ -6,11 +6,8 @@
 
 /*  стили для всего документа */
 html, body {
-    font-family: Arial, sans-serif;
-    /*background-color: rgba(248, 249, 250, 0.36);*/
-    color: #333;
     height: 100%;
-    width: 100%;
+    font-family: Arial, sans-serif;
 }
 
 /* стили ссылок */
