@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '@app/hooks/hooks';
 import { logoutUser, fetchCurrentUser } from '@app/slices/authSlice';
 import { clearLocalCart, syncCartWithLocal, fetchCart } from '@app/slices/cartSlice';
@@ -70,9 +70,10 @@ const Header: React.FC = () => {
           <Link to="/"><img src={logo} alt="Logo" /></Link>
         </div>
         <nav className="nav">
+         
           <ul className="nav-list">
-            <li>
-              <Link to="/pools/"><Dropdown/></Link>
+            <li className="pools">
+              <Dropdown/>
             </li>
             <li>
               <Link to="/hamamy/">Хамамы</Link>

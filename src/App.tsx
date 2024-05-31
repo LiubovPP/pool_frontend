@@ -17,6 +17,9 @@ import "@styles/App.css";
 import ErrorPage from "@pages/ErrorPage";
 import Maintanance from "@pages/Maintanance";
 import Composite from "@pages/Composite";
+import Frame from "@pages/Frame";
+import Concrete from "@pages/Concrete";
+import Adjustable from "@pages/Adjustable";
 
 const App: React.FC = () => {
     const { user, isAuthenticated } = useAppSelector((state) => state.auth);
@@ -42,6 +45,9 @@ const App: React.FC = () => {
                     <Route path="/hamamy" element={<HamamPage />} /> {/* Добавить маршрут для HamamPage */}
                     <Route path="/maintanance" element={<Maintanance />} />
                     <Route path="/composite" element={<Composite />} />
+                    <Route path="/frame" element={<Frame />} />
+                    <Route path="/concrete" element={<Concrete />} />
+                    <Route path="/adjustable" element={<Adjustable />} />
                     <Route path="*" element={<ErrorPage />} />
                     {user && user.role === "ADMIN" && (
                         <>
