@@ -1,25 +1,33 @@
-
 .orders-page {
     padding: 20px;
-  }
-  
-  .order {
+}
+
+.order {
     border: 1px solid #ccc;
     padding: 10px;
     margin-bottom: 10px;
-  }
-  
-  .order-details {
+}
+
+.order-details {
     display: flex;
     justify-content: space-between;
-  }
-  
-  .order-actions {
+}
+
+.order-actions {
     margin-top: 10px;
     text-align: right;
-  }
-  
-  button {
+}
+
+button {
     margin-right: 10px;
-  }
-  
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}

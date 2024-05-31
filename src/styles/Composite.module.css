@@ -1,98 +1,53 @@
-*{padding: 0px;
-  margin: 0px;
-  border: 0px;
-
+.text {
+    padding: 20px;
+    text-align: center;
 }
-
 
 .imageContainer {
     position: relative;
-    margin: 0px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    /* box-shadow: rgba(0.5, 1, 1, 0.5) 3px 3px 3px 3px; */
-    border: none;
-  }
-  .imageText {
+    justify-content: space-around;
+}
+
+.image {
+    width: 100%;
+    max-width: 1200px;
+    height: auto;
+}
+
+.imageText {
     position: absolute;
-    top: 160px;
-    left: 60px;
-    color: white; /* цвет текста */
-    font-size: 16px; /* размер шрифта */
-    text-align: left;
-    text-size-adjust: 100%;
-    padding: 10px; /* отступ внутри блока текста */
-  }
-   .card_1{ 
-    display: flex; 
-    justify-content: space-between;  
-    float: right;  
-    position:relative;  
-    margin-top: -300px; 
-    margin-right: 30px;
-    background-color: #5788f5;
-    width: 550px;
-    height: 300px; 
-    margin-bottom: 50px; 
-  }  
-  .text_h3{
-    padding-top: -5px;
-    color:#5788f5;
-  }
-  .text_p{
-    padding-top: 20px;
-    color: #333333;
-  }
-  .text_span{
-    margin-top: 20px;
-    color:#A0A0A0;
-  }
-  .text_spec{
-    margin: 0px;
-    color: #A0A0A0;
-  }
-  .text_info{
-    padding-top: 10%;
-    padding-left: 25%;
-    text-align: left; 
-    text-size-adjust: 80%;  
+    top: 20%;
+    left: 10%;
     color: white;
-  }
-   
-  .card {
-  display: flex;
-  width: 95%;
-  height: 400px;
-  background-color: rgb(255, 255, 255);
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 12px 0px;
-  margin-top: 40px;
-  margin-left: 30px; 
-  }
-  .photo {
-  padding-top: 20px;
-  padding-left: 20px;
-  width: 150px;
-  height: 150px;
-  margin-right: 20px;
-}
-.specialistText {
-  position: absolute;
-  padding-top: 3px;
-  padding-left: 20px;
-  gap: 45px;
-  text-align: left;
-  text-size-adjust: 100%;
-  color:#5788f5;
-}
-.serviceText {
-    margin-top: 10px;
+    font-size: 24px;
     text-align: left;
-    text-size-adjust: 100%;
+    padding: 10px;
 }
-.image{
-  position: relative;
-   margin-top: -20px; 
-   width: 1579px;
-   
+
+.card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 12px 0px;
+    margin: 20px 0;
+    padding: 20px;
+    text-align: left;
+}
+
+@media (min-width: 768px) {
+    .card {
+        flex-direction: row;
+    }
+}
+
+.specialistText {
+    color: #5788f5;
+    margin-bottom: 10px;
+}
+
+.serviceText {
+    color: #333333;
 }

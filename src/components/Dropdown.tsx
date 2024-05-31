@@ -5,8 +5,6 @@ import '@styles/Dropdown.css'
 
 function Dropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const title = 'Бассейны ▼ ';
-
   const toggleDropdown = () => setIsOpen(!isOpen);
   const closeDropdown = () => {setIsOpen(false);
   };
@@ -40,11 +38,11 @@ function Dropdown() {
     );
 
   return (
-    <div className={`dropdown ${isOpen ? 'dropdown-open' : ''}`}>
-    <div onClick={toggleDropdown}>{title}</div>
-    {isOpen && dropdownContent}
-  </div>
-  );
+    <div className={`dropdown ${isOpen ? "dropdown-open" : ""}`}>
+      <div onClick={toggleDropdown}>Бассейны ▼</div>
+      {isOpen && dropdownContent}
+    </div>
+  )
 }
 export default Dropdown;
 

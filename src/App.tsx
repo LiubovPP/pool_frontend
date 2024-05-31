@@ -22,14 +22,14 @@ import Concrete from "@pages/Concrete";
 import Adjustable from "@pages/Adjustable";
 
 const App: React.FC = () => {
-    const { user, isAuthenticated } = useAppSelector((state) => state.auth);
-    const dispatch = useAppDispatch();
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth)
+  const dispatch = useAppDispatch()
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            dispatch(fetchCurrentUser());
-        }
-    }, [isAuthenticated, dispatch]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchCurrentUser())
+    }
+  }, [isAuthenticated, dispatch])
 
     return (
         <div className="app">
@@ -62,4 +62,4 @@ const App: React.FC = () => {
     );
 };
 
-export default App;
+export default App
