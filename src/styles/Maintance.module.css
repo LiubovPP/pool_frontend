@@ -1,8 +1,17 @@
 .text {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 20px; */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 1;
 }
 
 .imageContainer {
@@ -12,11 +21,11 @@
     margin-bottom: 20px;
 }
 
-.image {
+/* .image {
     width: 100%;
     height: auto;
     max-width: 800px;
-}
+} */
 
 .imageText {
     position: absolute;

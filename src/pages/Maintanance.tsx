@@ -8,8 +8,9 @@ export default function Maintanance() {
 
   return (
     <div className={styles.text}>
+       <img src={img} alt="maintenance" className={styles.image} />
       <div className={styles.imageContainer}>
-        <img src={img} alt="maintenance" className={styles.image} />
+       
         <div className={styles.imageText}>
           <h1>Обслуживание</h1>
           <h1>бассейнов</h1>

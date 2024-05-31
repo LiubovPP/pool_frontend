@@ -37,12 +37,3 @@ body {
     box-sizing: border-box;
     margin-top: auto;
 }
-
-.footer-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-}

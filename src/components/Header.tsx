@@ -9,6 +9,7 @@ import RegisterModal from "@components/RegisterModal"
 import { FaShoppingCart } from "react-icons/fa"
 import logo from "@assets/logo.png"
 import "@styles/Header.css"
+import Dropdown from "./Dropdown"
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -62,9 +63,11 @@ const Header: React.FC = () => {
           <Link to="/"><img src={logo} alt="Logo" /></Link>
         </div>
         <nav className="nav">
+         
           <ul className="nav-list">
             <li>
-              <Link to="/pools/">Бассейны</Link>
+              <Link to="/pools/"></Link>
+              <Dropdown/>
             </li>
             <li>
               <Link to="/hamamy/">Хамамы</Link>

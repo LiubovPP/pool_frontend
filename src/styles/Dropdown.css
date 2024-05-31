@@ -1,6 +1,9 @@
 .dropdown {
     position: relative;
     display: inline-block;
+    color:white;
+    font-size: 18px;
+    cursor: pointer;
 }
 
 .dropdown-open .dropdown-content {
