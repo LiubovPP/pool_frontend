@@ -25,7 +25,6 @@ export const loginUser = createAsyncThunk(
         headers: {
           "Content-Type": "application/x-www-form-urlencoded"
         }
-
       }
     )
     return response.data.user
@@ -61,8 +60,7 @@ const authSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(loginUser.fulfilled, (state, action) => {
-        // state.user = action.payload;
-
+        state.user = action.payload
         state.isAuthenticated = true
         state.error = null
         localStorage.setItem("isAuthenticated", JSON.stringify(true))
@@ -72,8 +70,8 @@ const authSlice = createSlice({
         state.error = "Неверный логин или пароль"
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-        // state.user = action.payload;
-        // state.isAuthenticated = true;
+        state.user = action.payload
+        state.isAuthenticated = true
         state.error = null
       })
       .addCase(registerUser.rejected, state => {

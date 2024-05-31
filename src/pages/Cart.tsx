@@ -1,6 +1,6 @@
-import type React from "react"
-import { useEffect, useState } from "react"
-import { useAppSelector, useAppDispatch } from "@app/hooks/hooks" // Используем типизированные хуки
+import type React from "react";
+import { useState, useEffect } from "react"
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 import {
   fetchCart,
   removeFromCart,
@@ -21,10 +21,10 @@ const Cart: React.FC = () => {
   const [isOrderModalOpen, setOrderModalOpen] = useState(false)
 
   useEffect(() => {
-    if (user && user.id) {
-      dispatch(fetchCart(user.id))
+    if (isAuthenticated) {
+      dispatch(fetchCart())
     }
-  }, [dispatch, user])
+  }, [dispatch, isAuthenticated])
 
   const handleRemove = (cartProductId: number) => {
     if (cart) {
@@ -69,7 +69,7 @@ const Cart: React.FC = () => {
         {cart?.products.map((item) => (
           <li key={item.id}>
             <span>Product ID: {item.productId} - Количество: {item.quantity}</span>
-            <button onClick={() => handleRemove(item.id)}>Удалить</button>
+            <button onClick={() => handleRemove(item.productId)}>Удалить</button>
             <button onClick={() => handleUpdateQuantity(item, item.quantity + 1)}>+</button>
             <button onClick={() => handleUpdateQuantity(item, item.quantity - 1)}>-</button>
           </li>
