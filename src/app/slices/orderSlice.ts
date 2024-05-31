@@ -1,7 +1,7 @@
-import type { PayloadAction } from "@reduxjs/toolkit"
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
 import axios from "axios"
 import type { Order } from "@app/types"
+import { RootState } from "@app/store"
 
 interface OrdersState {
   orders: Order[];
@@ -25,15 +25,17 @@ export const fetchOrderById = createAsyncThunk("orders/fetchOrderById", async (i
   return response.data
 })
 
-export const createOrder = createAsyncThunk("orders/createOrder", async (order: Omit<Order, "id">) => {
-  const response = await axios.post("/api/orders", order, {
-    headers: {
-      "Content-Type": "application/json"
-    },
-    withCredentials: true
-  })
-  return response.data
-})
+export const createOrder = createAsyncThunk<Order, Omit<Order, "id">, { state: RootState; rejectValue: string }>(
+  "orders/createOrder",
+  async (orderData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("/api/orders", orderData, { withCredentials: true })
+      return response.data
+    } catch (error) {
+      return rejectWithValue("Ошибка при создании заказа")
+    }
+  }
+)
 
 export const updateOrder = createAsyncThunk("orders/updateOrder", async (order: Order) => {
   const response = await axios.put(`/api/orders/${order.id}`, order, {
@@ -68,8 +70,17 @@ const ordersSlice = createSlice({
         state.loading = false
         state.error = action.error.message || "Не удалось загрузить заказы"
       })
-      .addCase(createOrder.fulfilled, (state, action: PayloadAction<Order>) => {
+      .addCase(createOrder.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(createOrder.fulfilled, (state, action) => {
+        state.loading = false
         state.orders.push(action.payload)
+      })
+      .addCase(createOrder.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload as string
       })
       .addCase(updateOrder.fulfilled, (state, action: PayloadAction<Order>) => {
         const index = state.orders.findIndex((order) => order.id === action.payload.id)

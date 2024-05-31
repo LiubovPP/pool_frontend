@@ -1,4 +1,4 @@
-import type React from "react"
+import type React from "react";
 import { useState } from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import { loginUser } from "@app/slices/authSlice"
@@ -36,7 +36,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) 
   }
 
   const handleLogin = async (values: { username: string; password: string }, { resetForm }: {
-    resetForm: () => void
+    resetForm: () => void;
   }) => {
     try {
       await dispatch(loginUser(values)).unwrap()

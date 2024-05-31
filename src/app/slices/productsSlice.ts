@@ -23,36 +23,28 @@ export const fetchProducts = createAsyncThunk("products/fetchProducts", async ()
   }
 })
 
-export const addProduct = createAsyncThunk(
-  "products/addProduct",
-  async (product: Omit<Product, "id">) => {
-    const response = await axios.post("/api/products", product, {
-      headers: {
-        "Content-Type": "application/json"
-      },
-      withCredentials: true
-    })
-    return response.data
-  }
-)
-
-export const updateProduct = createAsyncThunk(
-  "products/updateProduct",
-  async (product: Product) => {
-    const response = await axios.put(`/api/products/${product.id}`, product, {
-      headers: {
-        "Content-Type": "application/json"
-      },
-      withCredentials: true
-    })
-    return response.data
-  }
-)
-
-export const deleteProduct = createAsyncThunk("products/deleteProduct", async (id: number) => {
-  await axios.delete(`/api/products/${id}`, {
+export const addProduct = createAsyncThunk("products/addProduct", async (product: Omit<Product, "id">) => {
+  const response = await axios.post("/api/products", product, {
+    headers: {
+      "Content-Type": "application/json"
+    },
     withCredentials: true
   })
+  return response.data
+})
+
+export const updateProduct = createAsyncThunk("products/updateProduct", async (product: Product) => {
+  const response = await axios.put(`/api/products/${product.id}`, product, {
+    headers: {
+      "Content-Type": "application/json"
+    },
+    withCredentials: true
+  })
+  return response.data
+})
+
+export const deleteProduct = createAsyncThunk("products/deleteProduct", async (id: number) => {
+  await axios.delete(`/api/products/${id}`, { withCredentials: true })
   return id
 })
 

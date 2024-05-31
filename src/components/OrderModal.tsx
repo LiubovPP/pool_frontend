@@ -1,10 +1,9 @@
-import type React from "react"
+import type React from "react";
 import { useState, useEffect } from "react"
-import type { AppDispatch } from "@app/store"
+import { useAppDispatch } from "@app/hooks/hooks"
 import { createOrder } from "@app/slices/orderSlice"
 import type { Cart, User, OrderProduct } from "@app/types"
 import "@styles/Modals.css"
-import { useAppDispatch } from "@app/hooks/hooks"
 
 interface OrderModalProps {
   isOpen: boolean;
@@ -15,7 +14,7 @@ interface OrderModalProps {
 }
 
 const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, cart, user, onOrderSuccess }) => {
-  const dispatch: AppDispatch = useAppDispatch()
+  const dispatch = useAppDispatch()
   const [summa, setSumma] = useState<number>(0)
 
   useEffect(() => {
@@ -31,7 +30,8 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, cart, user, on
         id: 0,
         orderId: 0,
         productId: item.productId,
-        quantity: item.quantity
+        quantity: item.quantity,
+        price: item.price // add price here
       }))
 
       await dispatch(createOrder({
@@ -43,7 +43,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, cart, user, on
       })).unwrap()
       onOrderSuccess()
     }
-  }
+  };
 
   if (!isOpen) return null
 
