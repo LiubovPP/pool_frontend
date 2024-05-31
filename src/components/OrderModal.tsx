@@ -1,9 +1,9 @@
-import type React from 'react';
-import { useState, useEffect } from 'react';
-import type { AppDispatch } from '@app/store';
-import { createOrder } from '@app/slices/orderSlice';
-import type { Cart, User, OrderProduct } from '@app/types';
-import '@styles/Modals.css';
+import type React from "react"
+import { useState, useEffect } from "react"
+import type { AppDispatch } from "@app/store"
+import { createOrder } from "@app/slices/orderSlice"
+import type { Cart, User, OrderProduct } from "@app/types"
+import "@styles/Modals.css"
 import { useAppDispatch } from "@app/hooks/hooks"
 
 interface OrderModalProps {
@@ -15,15 +15,15 @@ interface OrderModalProps {
 }
 
 const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, cart, user, onOrderSuccess }) => {
-  const dispatch: AppDispatch = useAppDispatch();
-  const [summa, setSumma] = useState<number>(0);
+  const dispatch: AppDispatch = useAppDispatch()
+  const [summa, setSumma] = useState<number>(0)
 
   useEffect(() => {
     if (cart) {
-      const totalSum = cart.products.reduce((total, item) => total + item.quantity * item.price, 0);
-      setSumma(totalSum);
+      const totalSum = cart.products.reduce((total, item) => total + item.quantity * item.price, 0)
+      setSumma(totalSum)
     }
-  }, [cart]);
+  }, [cart])
 
   const handleCreateOrder = async () => {
     if (cart && user) {
@@ -32,7 +32,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, cart, user, on
         orderId: 0,
         productId: item.productId,
         quantity: item.quantity
-      }));
+      }))
 
       await dispatch(createOrder({
         userId: user.id,
@@ -40,12 +40,12 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, cart, user, on
         itemsCount: cart.products.reduce((total, item) => total + item.quantity, 0),
         date: new Date().toISOString(),
         products: orderProducts
-      })).unwrap();
-      onOrderSuccess();
+      })).unwrap()
+      onOrderSuccess()
     }
-  };
+  }
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div className="modal">
@@ -57,7 +57,7 @@ const OrderModal: React.FC<OrderModalProps> = ({ isOpen, onClose, cart, user, on
         <button onClick={onClose}>Отмена</button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default OrderModal;
+export default OrderModal

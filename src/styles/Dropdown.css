@@ -1,29 +1,36 @@
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-open .dropdown-content {
+    display: block;
+}
+
 .dropdown-content {
-    list-style-type: none;
+    display: none;
     position: absolute;
-    width: 135px;
-    padding: 10px;
     background-color: #5788f5;
-    border-radius: 2px; 
-    margin: 0;
-    top: 100%; /* Расположите выпадающее меню под родительским элементом */
-    left: 0; /* Выравнивание по левому краю */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Добавьте тень для стиля */
-
-
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    list-style-type: none;
+    padding: 10px 0;
 }
 
 .dropdown-item {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 2px;
+    padding: 8px 16px;
     color: white;
-    cursor: pointer;
-    padding: 8px 12px; /* Увеличьте отступы для более удобного клика */
-    transition: background-color 0.2s ease; /* Плавное изменение цвета при наведении */
+    text-decoration: none;
+    display: block;
 }
+
 .dropdown-item:hover {
-    background-color: #3b6fc9; /* Измените цвет при наведении */
+    background-color: #3b6fc9;
+}
+
+@media (max-width: 768px) {
+    .dropdown-content {
+        width: 100%;
+        box-sizing: border-box;
+    }
 }

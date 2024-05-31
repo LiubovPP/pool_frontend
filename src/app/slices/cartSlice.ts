@@ -32,26 +32,25 @@ const initialState: CartState = {
   error: null
 }
 
-export const fetchCart = createAsyncThunk<Cart | null, number, { state: RootState; rejectValue: string }>(
+const fetchCart = createAsyncThunk<Cart | null, void, { state: RootState; rejectValue: string }>(
   "cart/fetchCart",
-  async (userId, { getState, rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
     const state = getState()
     if (state.auth.isAuthenticated) {
       try {
-        const response = await axios.post(`/api/cart`, { withCredentials: true })
-        return response.data
-      } catch (createError) {
-        return rejectWithValue("Ошибка при создании корзины")
+        const response = await axios.get(`/api/cart/cart-products`, { withCredentials: true })
+        return { id: 1, products: response.data }
+      } catch (error) {
+        return rejectWithValue("Ошибка при получении корзины")
       }
     }
-    // return rejectWithValue(error.response?.data || "Ошибка при получении корзины")
-
+    return null
   }
 )
 
-export const addToCart = createAsyncThunk<CartProduct, Omit<CartProduct, "id">, {
+const addToCart = createAsyncThunk<CartProduct, Omit<CartProduct, "id">, {
   state: RootState;
-  rejectValue: string
+  rejectValue: string;
 }>(
   "cart/addToCart",
   async (product, { getState, rejectWithValue }) => {
@@ -61,7 +60,7 @@ export const addToCart = createAsyncThunk<CartProduct, Omit<CartProduct, "id">, 
       try {
         const cartId = state.cart.cart?.id
         if (!cartId) throw new Error("Корзина не найдена")
-        const response = await axios.post(`/api/cart/${cartId}/products`, product, { withCredentials: true })
+        const response = await axios.post(`/api/cart/cart-products/product`, product, { withCredentials: true })
         return response.data
       } catch (error) {
         return rejectWithValue("Ошибка при добавлении товара в корзину")
@@ -80,7 +79,7 @@ export const addToCart = createAsyncThunk<CartProduct, Omit<CartProduct, "id">, 
   }
 )
 
-export const updateCartProduct = createAsyncThunk<CartProduct, CartProduct, { state: RootState; rejectValue: string }>(
+const updateCartProduct = createAsyncThunk<CartProduct, CartProduct, { state: RootState; rejectValue: string }>(
   "cart/updateCartProduct",
   async (cartProduct, { getState, rejectWithValue }) => {
     const state = getState()
@@ -108,7 +107,7 @@ export const updateCartProduct = createAsyncThunk<CartProduct, CartProduct, { st
   }
 )
 
-export const removeFromCart = createAsyncThunk<number, number, { state: RootState; rejectValue: string }>(
+const removeFromCart = createAsyncThunk<number, number, { state: RootState; rejectValue: string }>(
   "cart/removeFromCart",
   async (cartProductId, { getState, rejectWithValue }) => {
     const state = getState()
@@ -119,7 +118,7 @@ export const removeFromCart = createAsyncThunk<number, number, { state: RootStat
         return rejectWithValue("Корзина не найдена")
       }
       try {
-        await axios.delete(`/api/cart/${cartId}/cart-products/${cartProductId}`, { withCredentials: true })
+        await axios.delete(`/api/cart/cart-products/${cartProductId}`, { withCredentials: true })
         return cartProductId
       } catch (error) {
         return rejectWithValue("Ошибка при удалении товара из корзины")
@@ -129,27 +128,6 @@ export const removeFromCart = createAsyncThunk<number, number, { state: RootStat
       cart.products = cart.products.filter(product => product.id !== cartProductId)
       saveCartToLocalStorage(cart)
       return cartProductId
-    }
-  }
-)
-
-export const clearCart = createAsyncThunk<void, void, { state: RootState; rejectValue: string }>(
-  "cart/clearCart",
-  async (_, { getState, rejectWithValue }) => {
-    const state = getState()
-    const isAuthenticated = state.auth.isAuthenticated
-    if (isAuthenticated) {
-      try {
-        const cartId = state.cart.cart?.id
-        if (!cartId) throw new Error("Корзина не найдена")
-        await axios.delete(`/api/cart/${cartId}`, { withCredentials: true })
-        return
-      } catch (error) {
-        return rejectWithValue("Ошибка при очистке корзины")
-      }
-    } else {
-      localStorage.removeItem("cart")
-      return
     }
   }
 )
@@ -245,10 +223,6 @@ const cartSlice = createSlice({
           saveCartToLocalStorage(state.cart)
         }
       })
-      .addCase(clearCart.fulfilled, (state) => {
-        state.cart = null
-        localStorage.removeItem("cart")
-      })
   }
 })
 
@@ -259,4 +233,5 @@ export const {
   clearLocalCart,
   syncCartWithLocal
 } = cartSlice.actions
+export { fetchCart, addToCart, updateCartProduct, removeFromCart }
 export default cartSlice.reducer
