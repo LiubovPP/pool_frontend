@@ -4,6 +4,7 @@ import hamamsBackground from '@assets/hamam.png';
 
 const HamamPage: React.FC = () => {
     return (
+        <>
         <div className="hamam-page" style={{ backgroundImage: `url(${hamamsBackground})` }}>
             <div className="hamam-content">
                 <h1>Хамамы</h1>
@@ -11,6 +12,13 @@ const HamamPage: React.FC = () => {
                 <button className="call-button">Заказать звонок</button>
             </div>
         </div>
+            <br/>
+        <div>
+            <h1>
+                Хамамы это .......
+            </h1>
+        </div>
+        </>
     );
 };
 
