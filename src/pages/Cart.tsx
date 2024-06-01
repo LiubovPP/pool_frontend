@@ -1,6 +1,5 @@
-import type React from "react"
-import { useEffect, useState } from "react"
-import { useAppSelector, useAppDispatch } from "@app/hooks/hooks" // Используем типизированные хуки
+import React, { useEffect, useState } from "react"
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 import {
   fetchCart,
   removeFromCart,
@@ -8,10 +7,10 @@ import {
   updateLocalCartProduct,
   removeFromLocalCart
 } from "@app/slices/cartSlice"
-import type { CartProduct } from "@app/types"
-import "@styles/Cart.css"
 import LoginModal from "@components/LoginModal"
 import OrderModal from "@components/OrderModal"
+import type { CartProduct } from "@app/types"
+import "@styles/Cart.css"
 
 const Cart: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -21,15 +20,17 @@ const Cart: React.FC = () => {
   const [isOrderModalOpen, setOrderModalOpen] = useState(false)
 
   useEffect(() => {
-    if (user && user.id) {
-      dispatch(fetchCart(user.id))
+    if (isAuthenticated) {
+      dispatch(fetchCart())
     }
-  }, [dispatch, user])
+  }, [dispatch, isAuthenticated])
 
   const handleRemove = (cartProductId: number) => {
     if (cart) {
       if (isAuthenticated) {
-        dispatch(removeFromCart(cartProductId))
+        dispatch(removeFromCart(cartProductId)).unwrap().catch((error) => {
+          console.error("Ошибка при удалении товара из корзины", error)
+        })
       } else {
         dispatch(removeFromLocalCart(cartProductId))
       }

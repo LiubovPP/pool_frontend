@@ -1,7 +1,7 @@
-import type React from "react"
+import type React from "react";
 import { useEffect } from "react"
-import type { RootState, AppDispatch } from "../app/store"
-import { fetchUsers, deleteUser } from "../app/slices/usersSlice"
+import type { RootState, AppDispatch } from "@app/store"
+import { fetchUsers, deleteUser } from "@app/slices/usersSlice"
 import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 
 const AdminUsers: React.FC = () => {

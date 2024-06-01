@@ -1,140 +1,109 @@
-import React, { useState, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@app/hooks/hooks";
-import { fetchProducts, addProduct, deleteProduct, updateProduct } from "@app/slices/productsSlice";
-import { addToCart, addToLocalCart, fetchCart } from "@app/slices/cartSlice";
-import type { Product, CartProduct } from "@app/types";
-import "@styles/Products.css";
+import React, { useState, useEffect } from "react"
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
+import { fetchProducts, addProduct, updateProduct, deleteProduct } from "@app/slices/productsSlice"
+import type { CartProduct, Product } from "@app/types"
+import ProductForm from "@components/ProductForm"
+import "@styles/Products.css"
+import useAddToCart from "@app/hooks/useAddToCart"
 
 const Products: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const { products, loading, error } = useAppSelector(state => state.products);
-  const { user, isAuthenticated } = useAppSelector(state => state.auth);
-  const { cart } = useAppSelector(state => state.cart);
-  const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
-    title: "",
-    category: "",
-    price: 0,
-    imageUrl: ""
-  });
+  const dispatch = useAppDispatch()
+  const { products, loading, error } = useAppSelector((state) => state.products)
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth)
+  const { addProductToCart } = useAddToCart()
+
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+  const [isAddingProduct, setIsAddingProduct] = useState(false)
 
   useEffect(() => {
-    dispatch(fetchProducts());
-    if (isAuthenticated && user?.id) {
-      dispatch(fetchCart(user.id));
-    }
-  }, [dispatch, isAuthenticated, user]);
+    dispatch(fetchProducts())
+  }, [dispatch])
 
-  const handleAddToCart = (product: Product) => {
-    if (isAuthenticated && user?.id) {
-      const cartProduct: Omit<CartProduct, "id"> = {
-        cartId: user.id,
-        productId: product.id,
-        quantity: 1,
-        price: product.price
-      };
-      dispatch(addToCart(cartProduct));
-    } else {
-      const localCartProduct: Omit<CartProduct, "id"> = {
-        cartId: -1,
-        productId: product.id,
-        quantity: 1,
-        price: product.price
-      };
-      dispatch(addToLocalCart(localCartProduct));
+  const handleAddProduct = (product: Omit<Product, "id">) => {
+    dispatch(addProduct(product))
+    setIsAddingProduct(false)
+  }
+
+  const handleUpdateProduct = (product: Omit<Product, "id">) => {
+    if (editingProduct) {
+      dispatch(updateProduct({ ...editingProduct, ...product }))
+      setEditingProduct(null)
     }
-  };
+  }
 
   const handleDeleteProduct = (id: number) => {
-    dispatch(deleteProduct(id));
-  };
+    dispatch(deleteProduct(id))
+  }
 
-  const handleAddProduct = () => {
-    dispatch(addProduct(newProduct));
-    setNewProduct({ title: "", category: "", price: 0, imageUrl: "" });
-  };
-
-  const handleUpdateProduct = (product: Product) => {
-    dispatch(updateProduct(product));
-  };
+  const handleAddToCart = (product: Product) => {
+    const cartProduct: Omit<CartProduct, "id"> = {
+      cartId: user?.id || -1,
+      productId: product.id,
+      quantity: 1,
+      price: product.price
+    }
+    addProductToCart(cartProduct)
+  }
 
   return (
     <div>
       <h1>Продукты</h1>
+      {loading && <p>Загрузка...</p>}
+      {error && <p>{error}</p>}
       <div className="products-grid">
         {products.map((product) => (
           <div key={product.id} className="product-card">
-            <img src={product.imageUrl} alt={product.title} className="product-image" />
-            <div className="product-details">
-              <span className="product-title">{product.title}</span>
-              <span className="product-category">Категория: {product.category}</span>
-              <span className="product-price">Цена: {product.price} руб.</span>
-              <button onClick={(e) => {
-                e.stopPropagation();
-                handleAddToCart(product);
-              }}>Добавить в корзину</button>
-              {user?.role === "ADMIN" && (
-                <>
-                  <button onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteProduct(product.id);
-                  }}>Удалить продукт</button>
-                  <button onClick={(e) => {
-                    e.stopPropagation();
-                    handleUpdateProduct(product);
-                  }}>Изменить продукт</button>
-                </>
-              )}
-            </div>
+            {editingProduct && editingProduct.id === product.id ? (
+              <ProductForm
+                product={product}
+                onSubmit={handleUpdateProduct}
+                onCancel={() => setEditingProduct(null)}
+              />
+            ) : (
+              <div>
+                <img src={product.imageUrl} alt={product.title} className="product-image" />
+                <div className="product-details">
+                  <br />
+                  <span className="product-title">{product.title}</span>
+                  <br />
+                  <span className="product-category">Категория: {product.category}</span>
+                  <br />
+                  <span className="product-price">Цена: {product.price} руб.</span>
+                  <br />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleAddToCart(product)
+                    }}
+                  >
+                    Добавить в корзину
+                  </button>
+                  <br />
+                  {user?.role === "ADMIN" && (
+                    <>
+                      <br />
+                      <button onClick={() => setEditingProduct(product)}>Редактировать</button>
+                      <button onClick={() => handleDeleteProduct(product.id)}>Удалить</button>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
       {user?.role === "ADMIN" && (
         <div className="add-product-form">
           <h2>Добавить продукт</h2>
-          <input
-            type="text"
-            value={newProduct.title}
-            onChange={(e) => setNewProduct({ ...newProduct, title: e.target.value })}
-            placeholder="Название"
-          />
-          <input
-            type="text"
-            value={newProduct.category}
-            onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-            placeholder="Категория"
-          />
-          <input
-            type="number"
-            value={newProduct.price}
-            onChange={(e) => setNewProduct({ ...newProduct, price: +e.target.value })}
-            placeholder="Цена"
-          />
-          <input
-            type="text"
-            value={newProduct.imageUrl}
-            onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
-            placeholder="URL изображения"
-          />
-          <button onClick={handleAddProduct}>Добавить продукт</button>
-        </div>
-      )}
-      {cart && (
-        <div className="cart-summary">
-          <h2>Корзина</h2>
-          <ul>
-            {cart.products.map((item) => (
-              <li key={item.productId}>
-                {products.find(product => product.id === item.productId)?.title} - Количество: {item.quantity}
-              </li>
-            ))}
-          </ul>
-          <div>
-            Всего товаров в корзине: {cart.products.reduce((total, item) => total + item.quantity, 0)}
-          </div>
+          {isAddingProduct ? (
+            <ProductForm onSubmit={handleAddProduct} onCancel={() => setIsAddingProduct(false)} />
+          ) : (
+            <button onClick={() => setIsAddingProduct(true)}>Добавить продукт</button>
+          )}
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Products;
+export default Products

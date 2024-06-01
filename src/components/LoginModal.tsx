@@ -1,11 +1,11 @@
-import type React from 'react';
-import { useState } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { loginUser } from '@app/slices/authSlice';
-import '@styles/Modals.css';
-import { useAppDispatch, useAppSelector } from '@app/hooks/hooks';
-import type { RootState } from '@app/store';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import type React from "react";
+import { useState } from "react"
+import { Formik, Form, Field, ErrorMessage } from "formik"
+import { loginUser } from "@app/slices/authSlice"
+import "@styles/Modals.css"
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
+import type { RootState } from "@app/store"
+import { FaEye, FaEyeSlash } from "react-icons/fa"
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -14,38 +14,40 @@ interface LoginModalProps {
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) => {
-  const dispatch = useAppDispatch();
-  const error = useAppSelector((state: RootState) => state.auth.error);
-  const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useAppDispatch()
+  const error = useAppSelector((state: RootState) => state.auth.error)
+  const [showPassword, setShowPassword] = useState(false)
 
   const validate = (values: { username: string; password: string }) => {
-    const errors: { username?: string; password?: string } = {};
+    const errors: { username?: string; password?: string } = {}
     if (!values.username) {
-      errors.username = 'Имя пользователя обязательно';
+      errors.username = "Имя пользователя обязательно"
     } else if (values.username.length < 2) {
-      errors.username = 'Имя пользователя должно быть не менее 2 символов';
+      errors.username = "Имя пользователя должно быть не менее 2 символов"
     }
 
     if (!values.password) {
-      errors.password = 'Пароль обязателен';
+      errors.password = "Пароль обязателен"
     } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{6,}$/.test(values.password)) {
-      errors.password = 'Пароль должен содержать не менее одной заглавной и строчной буквы, одного спецсимвола и быть длиной не менее 6 символов';
+      errors.password = "Пароль должен содержать не менее одной заглавной и строчной буквы, одного спецсимвола и быть длиной не менее 6 символов"
     }
 
-    return errors;
-  };
+    return errors
+  }
 
-  const handleLogin = async (values: { username: string; password: string }, { resetForm }: { resetForm: () => void }) => {
+  const handleLogin = async (values: { username: string; password: string }, { resetForm }: {
+    resetForm: () => void;
+  }) => {
     try {
-      await dispatch(loginUser(values)).unwrap();
-      onClose();
-      resetForm();
+      await dispatch(loginUser(values)).unwrap()
+      onClose()
+      resetForm()
     } catch (error) {
-      console.error('Ошибка входа', error);
+      console.error("Ошибка входа", error)
     }
-  };
+  }
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div className="modal">
@@ -54,7 +56,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) 
         <h2>Вход</h2>
         {error && <p className="error">{error}</p>}
         <Formik
-          initialValues={{ username: '', password: '' }}
+          initialValues={{ username: "", password: "" }}
           validate={validate}
           onSubmit={handleLogin}
           validateOnChange={false}
@@ -70,11 +72,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) 
                   placeholder="example@domain.com"
                   autoComplete="username"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    const value = e.target.value;
-                    setFieldValue('username', value);
-                    const validationErrors = validate({ ...values, username: value });
-                    setErrors(validationErrors);
-                    setTouched({ ...touched, username: true });
+                    const value = e.target.value
+                    setFieldValue("username", value)
+                    const validationErrors = validate({ ...values, username: value })
+                    setErrors(validationErrors)
+                    setTouched({ ...touched, username: true })
                   }}
                   value={values.username}
                 />
@@ -91,11 +93,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) 
                     placeholder="Введите пароль"
                     autoComplete="current-password"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      const value = e.target.value;
-                      setFieldValue('password', value);
-                      const validationErrors = validate({ ...values, password: value });
-                      setErrors(validationErrors);
-                      setTouched({ ...touched, password: true });
+                      const value = e.target.value
+                      setFieldValue("password", value)
+                      const validationErrors = validate({ ...values, password: value })
+                      setErrors(validationErrors)
+                      setTouched({ ...touched, password: true })
                     }}
                     value={values.password}
                   />
@@ -120,7 +122,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegister }) 
         </Formik>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default LoginModal;
+export default LoginModal
