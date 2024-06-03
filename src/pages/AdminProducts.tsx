@@ -1,4 +1,4 @@
-import type React from "react"
+import type React from "react";
 import { useEffect, useState } from "react"
 import type { RootState, AppDispatch } from "@app/store"
 import { fetchProducts, addProduct, updateProduct } from "@app/slices/productsSlice"

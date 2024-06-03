@@ -6,10 +6,10 @@ import { logoutUser, fetchCurrentUser } from "@app/slices/authSlice"
 import { clearLocalCart, syncCartWithLocal, fetchCart } from "@app/slices/cartSlice"
 import LoginModal from "@components/LoginModal"
 import RegisterModal from "@components/RegisterModal"
-import { FaShoppingCart } from "react-icons/fa"
+import { FaShoppingCart, FaUserCircle } from "react-icons/fa"
 import logo from "@assets/logo.png"
 import "@styles/Header.css"
-import Dropdown from "./Dropdown"
+import Dropdown from "@components/Dropdown"
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -63,11 +63,10 @@ const Header: React.FC = () => {
           <Link to="/"><img src={logo} alt="Logo" /></Link>
         </div>
         <nav className="nav">
-         
           <ul className="nav-list">
             <li>
               <Link to="/pools/"></Link>
-              <Dropdown/>
+              <Dropdown />
             </li>
             <li>
               <Link to="/hamamy/">Хамамы</Link>
@@ -87,10 +86,10 @@ const Header: React.FC = () => {
             {isAuthenticated ? (
               <>
                 <li>
-                  <Link to="/profile">Профиль</Link>
+                  <Link to="/orders">Мои заказы</Link>
                 </li>
                 <li>
-                  <Link to="/orders">Мои заказы</Link>
+                  <Link to="/profile"><FaUserCircle size={24} /></Link>
                 </li>
                 <li>
                   <button onClick={handleLogout} className="nav-button">Выйти</button>

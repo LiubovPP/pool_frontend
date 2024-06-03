@@ -1,5 +1,5 @@
 import type React from "react"
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react"
 import type { RootState, AppDispatch } from "@app/store"
 import { fetchUsers, deleteUser, updateUser } from "@app/slices/usersSlice"
 import type { User } from "@app/types"

@@ -1,5 +1,4 @@
-import type React from "react";
-import { useState, useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 import {
   fetchCart,
@@ -8,10 +7,10 @@ import {
   updateLocalCartProduct,
   removeFromLocalCart
 } from "@app/slices/cartSlice"
-import type { CartProduct } from "@app/types"
-import "@styles/Cart.css"
 import LoginModal from "@components/LoginModal"
 import OrderModal from "@components/OrderModal"
+import type { CartProduct } from "@app/types"
+import "@styles/Cart.css"
 
 const Cart: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -29,7 +28,9 @@ const Cart: React.FC = () => {
   const handleRemove = (cartProductId: number) => {
     if (cart) {
       if (isAuthenticated) {
-        dispatch(removeFromCart(cartProductId))
+        dispatch(removeFromCart(cartProductId)).unwrap().catch((error) => {
+          console.error("Ошибка при удалении товара из корзины", error)
+        })
       } else {
         dispatch(removeFromLocalCart(cartProductId))
       }
@@ -69,7 +70,7 @@ const Cart: React.FC = () => {
         {cart?.products.map((item) => (
           <li key={item.id}>
             <span>Product ID: {item.productId} - Количество: {item.quantity}</span>
-            <button onClick={() => handleRemove(item.productId)}>Удалить</button>
+            <button onClick={() => handleRemove(item.id)}>Удалить</button>
             <button onClick={() => handleUpdateQuantity(item, item.quantity + 1)}>+</button>
             <button onClick={() => handleUpdateQuantity(item, item.quantity - 1)}>-</button>
           </li>
