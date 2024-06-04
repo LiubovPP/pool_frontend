@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
 import type { Cart, CartProduct } from "@app/types"
 import type { RootState } from "@app/store"
+import products from "@pages/Products"
 
 interface CartState {
   cart: Cart | null;
@@ -83,11 +84,11 @@ export const addToCart = createAsyncThunk<CartProduct, Omit<CartProduct, "id">, 
 
 export const removeFromCart = createAsyncThunk<CartProduct, number, { state: RootState; rejectValue: string }>(
   "cart/removeFromCart",
-  async (product, { getState, rejectWithValue }) => {
+  async (productId, { getState, rejectWithValue }) => {
     const state = getState()
     if (state.auth.isAuthenticated) {
       try {
-        const res = await axios.delete(`/api/cart/cart-products/${product}`, {
+        const res = await axios.delete(`/api/cart/cart-products/${productId}?productId=${productId}`, {
           withCredentials: true
         })
         return res.data
@@ -200,7 +201,7 @@ const cartSlice = createSlice({
       })
       .addCase(removeFromCart.fulfilled, (state, action) => {
         if (state.cart) {
-          state.cart.products = state.cart.products.filter((product) => product.productId !== action.payload.productId)
+          state.cart.products = state.cart.products.filter((product) => product.productId !== action.payload.cartId)
           saveCartToLocalStorage(state.cart)
         }
       })
