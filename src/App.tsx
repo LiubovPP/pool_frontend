@@ -21,6 +21,7 @@ import Composite from "@pages/Composite"
 import Frame from "@pages/Frame"
 import Concrete from "@pages/Concrete"
 import Adjustable from "@pages/Adjustable"
+import SaunaPage from "@pages/SaunaPage";
 
 const App: React.FC = () => {
   const { user, isAuthenticated } = useAppSelector((state) => state.auth)
@@ -44,6 +45,7 @@ const App: React.FC = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/hamamy" element={<HamamPage />} />
+          <Route path="/sauny" element={<SaunaPage />} />
           <Route path="/maintanance" element={<Maintenance />} />
           <Route path="/composite" element={<Composite />} />
           <Route path="/frame" element={<Frame />} />

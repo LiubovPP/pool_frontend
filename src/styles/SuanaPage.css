@@ -1,14 +1,10 @@
-HamamPage.css
-.hamam-page {
+SaunaPage.css
+.sauna-page {
     width: 100%;
     overflow-y: auto;
 }
-.hamam-gallery {
-    position: relative;
-    height: 500px;
-    overflow: hidden;
-}
-.hamam-background {
+
+.sauna-background {
     height: 100vh;
     width: 100vw;
     background-size: cover;
@@ -22,7 +18,7 @@ HamamPage.css
     border-top: none;
 }
 
-.hamam-content {
+.sauna-content {
     text-align: center;
     color: white;
     background: rgba(0, 0, 0, 0.5);
@@ -44,114 +40,57 @@ HamamPage.css
     background-color: #ff6900;
 }
 
-.hamam-sections {
-    padding: 20px 0;
+.sauna-key-features {
+    padding: 40px 20px;
+    text-align: center;
 }
 
-.hamam-ee .container {
+.sauna-key-features .container {
     max-width: 1200px;
     margin: 0 auto;
 }
 
-.row {
+.sauna-key-features h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.features-grid {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-around;
 }
 
-.col-md-9, .col-md-3 {
-    padding: 15px;
-}
-
-.col-md-9 {
-    flex: 0 0 75%;
-    max-width: 75%;
-}
-
-.col-md-3 {
-    flex: 0 0 25%;
-    max-width: 25%;
-}
-
-.hamam-xh {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.hamam-item {
-    display: flex;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    padding: 20px;
-}
-
-.hamam-icon {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-right: 20px;
-}
-
-.hamam-icon img {
-    max-width: 50px;
-}
-
-.hamam-text {
-    flex: 1;
-}
-
-.hamam-text h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-.hamam-text p {
-    font-size: 14px;
-    color: #555;
-}
-
-.mannerf {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
+.feature-item {
+    width: 200px;
     text-align: center;
-    padding: 20px;
+    margin: 20px;
 }
 
-.hamam-bann {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.hamam-bann img {
+.feature-item img {
     max-width: 100px;
     margin-bottom: 10px;
 }
 
-.hamamkak {
+.saunakak {
     background-color: #337ab7;
     color: white;
     padding: 40px 20px;
     text-align: center;
 }
 
-.zaghamam h2 {
+.zagsauna h2 {
     font-size: 32px;
     margin-bottom: 20px;
 }
 
-.etapyhamam {
+.etapysauna {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
 }
 
-.etaphamamsb {
+.etapsaunasb {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -185,7 +124,7 @@ HamamPage.css
     margin: 0;
 }
 
-.hamam-gallery {
+.sauna-gallery {
     position: relative;
     height: 500px;
     overflow: hidden;
