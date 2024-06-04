@@ -6,6 +6,7 @@ import type { RootState } from "@app/store"
 import products from "@pages/Products"
 
 interface CartState {
+  products: any
   cart: Cart | null;
   loading: boolean;
   error: string | null;
@@ -84,19 +85,31 @@ export const addToCart = createAsyncThunk<CartProduct, Omit<CartProduct, "id">, 
 
 export const removeFromCart = createAsyncThunk<CartProduct, number, { state: RootState; rejectValue: string }>(
   "cart/removeFromCart",
-  async (productId, { getState, rejectWithValue }) => {
+  async (productId: number, { getState, rejectWithValue }) => {
     const state = getState()
     if (state.auth.isAuthenticated) {
       try {
-        const res = await axios.delete(`/api/cart/cart-products/${productId}?productId=${productId}`, {
+        const response = await axios.delete(`/api/cart/cart-products/${productId}`, {
           withCredentials: true
         })
-        return res.data
+        return response.data
       } catch (error) {
-        return rejectWithValue("Ошибка при удалении товара из корзины")
+        if (error.response && error.response.status === 403) {
+          return rejectWithValue("Недостаточно прав для удаления товара")
+        } else if (error.response && error.response.status === 404) {
+          return rejectWithValue("Товар не найден в корзине")
+        } else {
+          return rejectWithValue("Ошибка при удалении товара из корзины")
+        }
       }
     } else {
-      return rejectWithValue("Неавторизованный доступ")
+      const cart = getState().cart
+      if (cart) {
+        const updatedCart = cart.products.filter((product) => product.productId !== productId)
+        saveCartToLocalStorage(updatedCart)
+        return updatedCart.find((product) => product.productId === productId)
+      }
+      return rejectWithValue("Товар не найден в корзине")
     }
   }
 )
@@ -199,12 +212,17 @@ const cartSlice = createSlice({
           saveCartToLocalStorage(state.cart)
         }
       })
-      .addCase(removeFromCart.fulfilled, (state, action) => {
-        if (state.cart) {
-          state.cart.products = state.cart.products.filter((product) => product.productId !== action.payload.cartId)
-          saveCartToLocalStorage(state.cart)
+      .addCase(removeFromCart.fulfilled, (state, action: PayloadAction<CartProduct | undefined>) => {
+        if (state.cart && action.payload) {
+          state.cart.products = state.cart.products.filter((product) => product.cartId !== action.payload.cartId)
         }
       })
+
+      .addCase(removeFromCart.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload || "Ошибка при удалении товара из корзины"
+      })
+
       .addCase(clearCart.fulfilled, (state) => {
         state.cart = null
         localStorage.removeItem("cart")
