@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
 import axios from "axios"
 import type { Order } from "@app/types"
-import { RootState } from "@app/store"
+import type { RootState } from "@app/store"
 
 interface OrdersState {
   orders: Order[];
@@ -20,19 +20,42 @@ export const fetchOrders = createAsyncThunk("orders/fetchOrders", async () => {
   return response.data
 })
 
-export const fetchOrderById = createAsyncThunk("orders/fetchOrderById", async (id: number) => {
-  const response = await axios.get(`/api/orders/${id}`, { withCredentials: true })
-  return response.data
-})
+export const fetchOrderById = createAsyncThunk<Order, number, { state: RootState; rejectValue: string }>(
+  "orders/fetchOrderById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/api/orders/${id}`, { withCredentials: true })
+      return response.data
+    } catch (error) {
+      return rejectWithValue("Ошибка при получении заказа по ID")
+    }
+  }
+)
 
 export const createOrder = createAsyncThunk<Order, Omit<Order, "id">, { state: RootState; rejectValue: string }>(
   "orders/createOrder",
-  async (orderData, { rejectWithValue }) => {
-    try {
-      const response = await axios.post("/api/orders", orderData, { withCredentials: true })
-      return response.data
-    } catch (error) {
-      return rejectWithValue("Ошибка при создании заказа")
+  async (orderData, { getState, rejectWithValue }) => {
+    const state = getState()
+    const user = state.auth.user
+
+    if (!user) {
+      return rejectWithValue("Пользователь не авторизован")
+    }
+
+    if (state.auth.isAuthenticated) {
+      try {
+        const order = {
+          ...orderData,
+          userId: user.id,
+          products: state.cart.cart?.products.map(product => ({ ...product, orderId: user.id }))
+        }
+        const response = await axios.post("/api/orders", order, { withCredentials: true })
+        return response.data
+      } catch (error) {
+        return rejectWithValue("Ошибка при создании заказа")
+      }
+    } else {
+      return rejectWithValue("Неавторизованный доступ")
     }
   }
 )

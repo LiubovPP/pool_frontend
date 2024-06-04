@@ -8,7 +8,7 @@ export default function Composite() {
       <div className={styles.imageContainer}>
         <img src={img} alt="composite" className={styles.image} />
         <div className={styles.imageText}>
-          <h1>Компазитные </h1>
+          <h1>Композитные </h1>
           <h1>бассейны</h1>
           {/* <p>Даже самый маленький бассейн требует</p>
             <p>постоянного внимания и ухода</p> */}

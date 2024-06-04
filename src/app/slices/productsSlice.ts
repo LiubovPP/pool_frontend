@@ -1,3 +1,4 @@
+import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
 import type { Product } from "@app/types"
@@ -58,7 +59,7 @@ const productsSlice = createSlice({
         state.loading = true
         state.error = null
       })
-      .addCase(fetchProducts.fulfilled, (state, action) => {
+      .addCase(fetchProducts.fulfilled, (state, action: PayloadAction<Product[]>) => {
         state.loading = false
         state.products = action.payload
       })
@@ -66,16 +67,16 @@ const productsSlice = createSlice({
         state.loading = false
         state.error = action.error.message || "Не удалось загрузить продукты"
       })
-      .addCase(addProduct.fulfilled, (state, action) => {
+      .addCase(addProduct.fulfilled, (state, action: PayloadAction<Product>) => {
         state.products.push(action.payload)
       })
-      .addCase(updateProduct.fulfilled, (state, action) => {
+      .addCase(updateProduct.fulfilled, (state, action: PayloadAction<Product>) => {
         const index = state.products.findIndex((product) => product.id === action.payload.id)
         if (index !== -1) {
           state.products[index] = action.payload
         }
       })
-      .addCase(deleteProduct.fulfilled, (state, action) => {
+      .addCase(deleteProduct.fulfilled, (state, action: PayloadAction<number>) => {
         state.products = state.products.filter((product) => product.id !== action.payload)
       })
   }

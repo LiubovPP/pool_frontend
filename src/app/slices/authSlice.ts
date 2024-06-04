@@ -1,6 +1,9 @@
+import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
 import type { User } from "@app/types"
+import { fetchCart } from "@app/slices/cartSlice"
+import type { RootState } from "@app/store"
 
 interface AuthState {
   user: User | null;
@@ -27,16 +30,27 @@ export const loginUser = createAsyncThunk(
   }
 )
 
-export const registerUser = createAsyncThunk(
+export const registerUser = createAsyncThunk<
+  User,
+  User,
+  { state: RootState; rejectValue: string }
+>(
   "auth/register",
-  async (userData: User) => {
-    const response = await axios.post("/api/users/register", userData, {
-      headers: {
-        "Content-Type": "application/json"
-      },
-      withCredentials: true
-    })
-    return response.data
+  async (userData, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await axios.post("/api/users/register", userData, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        withCredentials: true
+      })
+
+      await dispatch(fetchCart()).unwrap()
+
+      return response.data
+    } catch (error) {
+      return rejectWithValue("Ошибка регистрации")
+    }
   }
 )
 
@@ -67,13 +81,15 @@ const authSlice = createSlice({
         state.isAuthenticated = false
         state.error = "Неверный логин или пароль"
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
+      .addCase(registerUser.fulfilled, (state, action: PayloadAction<User>) => {
         state.user = action.payload
         state.isAuthenticated = true
         state.error = null
+        localStorage.setItem("isAuthenticated", JSON.stringify(true))
       })
-      .addCase(registerUser.rejected, (state) => {
-        state.error = "Ошибка регистрации"
+      .addCase(registerUser.rejected, (state, action) => {
+        state.isAuthenticated = false
+        state.error = action.payload || "Ошибка регистрации"
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null
