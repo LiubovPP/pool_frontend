@@ -1,13 +1,12 @@
 import type React from "react"
 import { useEffect } from "react"
-import type { RootState, AppDispatch } from "@app/store"
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 import { fetchOrders, deleteOrder, updateOrder } from "@app/slices/orderSlice"
 import "@styles/Order.css"
-import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 
 const OrdersPage: React.FC = () => {
-  const dispatch: AppDispatch = useAppDispatch()
-  const { orders, loading, error } = useAppSelector((state: RootState) => state.orders)
+  const dispatch = useAppDispatch()
+  const { orders, loading, error } = useAppSelector((state) => state.orders)
 
   useEffect(() => {
     dispatch(fetchOrders())
