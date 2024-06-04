@@ -1,4 +1,4 @@
-import type { PayloadAction } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit"
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
 import type { Product } from "@app/types"
@@ -45,8 +45,8 @@ export const updateProduct = createAsyncThunk("products/updateProduct", async (p
 })
 
 export const deleteProduct = createAsyncThunk("products/deleteProduct", async (id: number) => {
-  await axios.delete(`/api/products/${id}`, { withCredentials: true })
-  return id
+  const response = await axios.delete(`/api/products/${id}`, { withCredentials: true })
+  return response.data // Assuming the API returns the deleted product upon successful deletion
 })
 
 const productsSlice = createSlice({
@@ -76,8 +76,9 @@ const productsSlice = createSlice({
           state.products[index] = action.payload
         }
       })
-      .addCase(deleteProduct.fulfilled, (state, action: PayloadAction<number>) => {
-        state.products = state.products.filter((product) => product.id !== action.payload)
+      .addCase(deleteProduct.fulfilled, (state, action: PayloadAction<Product | number>) => {
+        const deletedProductId = typeof action.payload === "number" ? action.payload : action.payload.id
+        state.products = state.products.filter((product) => product.id !== deletedProductId)
       })
   }
 })

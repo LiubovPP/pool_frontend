@@ -62,7 +62,7 @@ const Products: React.FC = () => {
               />
             ) : (
               <div>
-                <img src={product.imageUrl} alt={product.title} className="product-image" />
+                {/*<img src={product.imageUrl} alt={product.title} className="product-image" />*/}
                 <div className="product-details">
                   <br />
                   <span className="product-title">{product.title}</span>
