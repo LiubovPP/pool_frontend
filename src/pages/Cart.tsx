@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react"
+import type React from "react"
+import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 import {
   fetchCart,
   removeFromCart,
-  updateCartProduct,
-  updateLocalCartProduct,
-  removeFromLocalCart
+  addToCart,
+  removeFromLocalCart,
+  updateLocalCartProduct
 } from "@app/slices/cartSlice"
 import LoginModal from "@components/LoginModal"
 import OrderModal from "@components/OrderModal"
@@ -25,24 +26,41 @@ const Cart: React.FC = () => {
     }
   }, [dispatch, isAuthenticated])
 
-  const handleRemove = (cartProductId: number) => {
+  const handleRemove = (productId: number) => {
     if (cart) {
       if (isAuthenticated) {
-        dispatch(removeFromCart(cartProductId)).unwrap().catch((error) => {
-          console.error("Ошибка при удалении товара из корзины", error)
-        })
+        dispatch(removeFromCart(productId))
+          .unwrap()
+          .catch((error) => {
+            console.error("Ошибка при удалении товара из корзины", error)
+          })
       } else {
-        dispatch(removeFromLocalCart(cartProductId))
+        dispatch(removeFromLocalCart(productId))
       }
     }
   }
 
   const handleUpdateQuantity = (product: CartProduct, quantity: number) => {
     if (cart) {
-      if (isAuthenticated) {
-        dispatch(updateCartProduct({ ...product, quantity }))
+      if (quantity <= 0) {
+        handleRemove(product.productId)
       } else {
-        dispatch(updateLocalCartProduct({ ...product, quantity }))
+        if (isAuthenticated) {
+          const updatedProduct = {
+            productId: product.productId,
+            quantity: quantity,
+            cartId: product.cartId,
+            price: product.price
+          }
+
+          dispatch(addToCart(updatedProduct))
+            .unwrap()
+            .catch((error) => {
+              console.error("Ошибка при обновлении количества товара в корзине", error)
+            })
+        } else {
+          dispatch(updateLocalCartProduct({ ...product, quantity }))
+        }
       }
     }
   }
@@ -68,9 +86,11 @@ const Cart: React.FC = () => {
       {errorMessage && <p className="error">{errorMessage}</p>}
       <ul className="cart-list">
         {cart?.products.map((item) => (
-          <li key={item.id}>
-            <span>Product ID: {item.productId} - Количество: {item.quantity}</span>
-            <button onClick={() => handleRemove(item.id)}>Удалить</button>
+          <li key={item.productId}>
+            <span>
+              Product ID: {item.productId} - Количество: {item.quantity}
+            </span>
+            <button onClick={() => handleRemove(item.productId)}>Удалить</button>
             <button onClick={() => handleUpdateQuantity(item, item.quantity + 1)}>+</button>
             <button onClick={() => handleUpdateQuantity(item, item.quantity - 1)}>-</button>
           </li>

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react"
+import type React from "react";
+import { useState, useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 import { fetchProducts, addProduct, updateProduct, deleteProduct } from "@app/slices/productsSlice"
 import type { CartProduct, Product } from "@app/types"

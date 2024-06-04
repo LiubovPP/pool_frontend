@@ -6,11 +6,13 @@
 .welcome-message {
     font-size: 24px;
     font-weight: bold;
-    color: #333;
+    /*color: #333;*/
+    color: white;
 }
 
 @media (max-width: 768px) {
     .welcome-message {
         font-size: 20px;
+
     }
 }

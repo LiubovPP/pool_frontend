@@ -1,13 +1,12 @@
-import type React from "react";
-import { useEffect, useState } from "react"
-import type { RootState, AppDispatch } from "@app/store"
+import type React from "react"
+import { useState, useEffect } from "react"
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 import { fetchProducts, addProduct, updateProduct } from "@app/slices/productsSlice"
 import type { Product } from "@app/types"
-import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 
 const AdminProducts: React.FC = () => {
-  const dispatch: AppDispatch = useAppDispatch()
-  const { products, loading, error } = useAppSelector((state: RootState) => state.products)
+  const dispatch = useAppDispatch()
+  const { products, loading, error } = useAppSelector((state) => state.products)
   const [newProduct, setNewProduct] = useState<Omit<Product, "id">>({
     title: "",
     category: "",

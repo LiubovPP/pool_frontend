@@ -1,3 +1,4 @@
+
 import React, {useEffect, useState} from "react";
 import "@styles/HamamPage.css"; // Предполагается, что у вас есть файл CSS для стилей
 import hamamsBackground from "@assets/hamam.png";

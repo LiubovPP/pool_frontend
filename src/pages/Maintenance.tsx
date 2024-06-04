@@ -4,7 +4,7 @@ import img from "../assets/maintanance.jpg"
 import photo from "../assets/vladimir.jpg"
 
 
-export default function Maintanance() {
+export default function Maintenance() {
 
   return (
     <div className={styles.text}>
