@@ -1,0 +1,53 @@
+.text {
+    padding: 20px;
+    text-align: center;
+}
+
+.imageContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.image {
+    width: 100%;
+    max-width: 1200px;
+    height: auto;
+}
+
+.imageText {
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    color: white;
+    font-size: 20px;
+    text-align: left;
+    padding: 10px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 12px 0px;
+    margin: 20px 0;
+    padding: 20px;
+    text-align: left;
+}
+
+@media (min-width: 768px) {
+    .card {
+        flex-direction: row;
+    }
+}
+
+.specialistText {
+    color: #5788f5;
+    margin-bottom: 10px;
+}
+
+.serviceText {
+    color: #333333;
+}

@@ -1,72 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { RootState, AppDispatch } from '@app/store';
-import { logoutUser, fetchCurrentUser } from '@app/slices/authSlice';
-import { clearLocalCart, syncCartWithLocal, fetchCart } from '@app/slices/cartSlice'; 
-import LoginModal from '@components/LoginModal';
-import RegisterModal from '@components/RegisterModal';
-import { FaShoppingCart } from 'react-icons/fa';
-import logo from '@assets/logo.png';
-import '@styles/Header.css';
+import type React from "react"
+import { useEffect, useState, useCallback } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { useAppSelector, useAppDispatch } from "@app/hooks/hooks"
+import { logoutUser, fetchCurrentUser } from "@app/slices/authSlice"
+import { clearLocalCart, syncCartWithLocal, fetchCart } from "@app/slices/cartSlice"
+import LoginModal from "@components/LoginModal"
+import RegisterModal from "@components/RegisterModal"
+import { FaShoppingCart, FaUserCircle } from "react-icons/fa"
+import logo from "@assets/logo.png"
+import "@styles/Header.css"
+import Dropdown from "@components/Dropdown"
 
 const Header: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const navigate = useNavigate();
-  const { cart } = useSelector((state: RootState) => state.cart);
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
-  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-  const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const { cart } = useAppSelector((state) => state.cart)
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth)
+  const [isLoginModalOpen, setLoginModalOpen] = useState(false)
+  const [isRegisterModalOpen, setRegisterModalOpen] = useState(false)
 
-  console.log('Header User:', user);
-
-  const totalItems = cart?.products.reduce((total, item) => total + item.quantity, 0) || 0;
+  const totalItems = cart?.products.reduce((total, item) => total + item.quantity, 0) || 0
 
   const handleLogout = async () => {
     try {
-      await dispatch(logoutUser()).unwrap();
-      dispatch(clearLocalCart()); 
-      navigate('/');
+      await dispatch(logoutUser()).unwrap()
+      dispatch(clearLocalCart())
+      navigate("/")
     } catch (error) {
-      console.error('Ошибка выхода', error);
+      console.error("Ошибка выхода", error)
     }
-  };
+  }
 
   const handleLogin = () => {
-    setLoginModalOpen(true);
-  };
+    setLoginModalOpen(true)
+  }
 
-  const handleSyncCart = async () => {
+  const handleSyncCart = useCallback(async () => {
     if (isAuthenticated) {
-      const localCart = JSON.parse(localStorage.getItem('cart') || 'null');
+      const localCart = JSON.parse(localStorage.getItem("cart") || "null")
       if (localCart) {
-        dispatch(syncCartWithLocal(localCart));
+        dispatch(syncCartWithLocal(localCart))
       }
       try {
-        await dispatch(fetchCurrentUser()).unwrap();
+        await dispatch(fetchCurrentUser()).unwrap()
         if (user) {
-          await dispatch(fetchCart(user.id)).unwrap();
+          await dispatch(fetchCart()).unwrap()
         }
       } catch (error) {
-        console.error('Ошибка при синхронизации корзины', error);
+        console.error("Ошибка при синхронизации корзины", error)
       }
     }
-  };
+  }, [isAuthenticated, dispatch])
 
   useEffect(() => {
-    handleSyncCart();
-  }, [isAuthenticated]);
+    handleSyncCart()
+  }, [handleSyncCart])
 
   return (
     <header className="header">
       <div className="header-container">
         <div className="brand">
-          <a href="/"><img src={logo} alt="Logo" /></a>
+          <Link to="/"><img src={logo} alt="Logo" /></Link>
         </div>
         <nav className="nav">
           <ul className="nav-list">
             <li>
-              <Link to="/pools/">Бассейны</Link>
+              <Link to="/pools/"></Link>
+              <Dropdown />
             </li>
             <li>
               <Link to="/hamamy/">Хамамы</Link>
@@ -86,10 +86,10 @@ const Header: React.FC = () => {
             {isAuthenticated ? (
               <>
                 <li>
-                  <Link to="/profile">Профиль</Link>
+                  <Link to="/orders">Мои заказы</Link>
                 </li>
                 <li>
-                  <Link to="/orders">Мои заказы</Link>
+                  <Link to="/profile"><FaUserCircle size={24} /></Link>
                 </li>
                 <li>
                   <button onClick={handleLogout} className="nav-button">Выйти</button>
@@ -113,13 +113,13 @@ const Header: React.FC = () => {
         isOpen={isLoginModalOpen}
         onClose={() => setLoginModalOpen(false)}
         onRegister={() => {
-          setLoginModalOpen(false);
-          setRegisterModalOpen(true);
+          setLoginModalOpen(false)
+          setRegisterModalOpen(true)
         }}
       />
       <RegisterModal isOpen={isRegisterModalOpen} onClose={() => setRegisterModalOpen(false)} />
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

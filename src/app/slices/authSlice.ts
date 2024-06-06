@@ -1,6 +1,9 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { User, UserRole } from "@app/types";
+import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import axios from "axios"
+import type { User } from "@app/types"
+import { fetchCart } from "@app/slices/cartSlice"
+import type { RootState } from "@app/store"
 
 interface AuthState {
   user: User | null;
@@ -10,100 +13,102 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  isAuthenticated: !!localStorage.getItem('isAuthenticated'),
-  error: null,
-};
+  isAuthenticated: !!localStorage.getItem("isAuthenticated"),
+  error: null
+}
 
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (credentials: { username: string; password: string }) => {
-    const response = await axios.post(
-      "/api/login",
-      new URLSearchParams(credentials),
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        withCredentials: true,
-      },
-    );
-    return response.data.user;
-  },
-);
-
-export const registerUser = createAsyncThunk(
-  "auth/register",
-  async (userData: User) => {
-    const response = await axios.post("/api/users/register", userData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const response = await axios.post("/api/login", credentials, {
       withCredentials: true,
-    });
-    return response.data;
-  },
-);
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    })
+    return response.data.user
+  }
+)
+
+export const registerUser = createAsyncThunk<
+  User,
+  User,
+  { state: RootState; rejectValue: string }
+>(
+  "auth/register",
+  async (userData, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await axios.post("/api/users/register", userData, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        withCredentials: true
+      })
+
+      await dispatch(fetchCart()).unwrap()
+
+      return response.data
+    } catch (error) {
+      return rejectWithValue("Ошибка регистрации")
+    }
+  }
+)
 
 export const logoutUser = createAsyncThunk("auth/logout", async () => {
-  await axios.post("/api/logout", {}, { withCredentials: true });
-});
+  await axios.post("/api/logout", {}, { withCredentials: true })
+})
 
 export const fetchCurrentUser = createAsyncThunk("auth/user", async () => {
-  const response = await axios.get("/api/users/profile");
-  return response.data;
-});
+  const response = await axios.get("/api/users/profile", {
+    withCredentials: true
+  })
+  return response.data
+})
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    logout(state) {
-      state.user = null;
-      state.isAuthenticated = false;
-      localStorage.removeItem("isAuthenticated");
-    },
-  },
-  extraReducers: builder => {
+  reducers: {},
+  extraReducers: (builder) => {
     builder
-      .addCase(loginUser.fulfilled, (state, action: PayloadAction<User>) => {
-        state.user = action.payload;
-        state.isAuthenticated = true;
-        state.error = null;
-        localStorage.setItem("isAuthenticated", JSON.stringify(true));
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.user = action.payload
+        state.isAuthenticated = true
+        state.error = null
+        localStorage.setItem("isAuthenticated", JSON.stringify(true))
       })
-      .addCase(loginUser.rejected, state => {
-        state.error = "Неверный логин или пароль";
+      .addCase(loginUser.rejected, (state) => {
+        state.isAuthenticated = false
+        state.error = "Неверный логин или пароль"
       })
       .addCase(registerUser.fulfilled, (state, action: PayloadAction<User>) => {
-        state.user = action.payload;
-        state.isAuthenticated = true;
-        state.error = null;
+        state.user = action.payload
+        state.isAuthenticated = true
+        state.error = null
+        localStorage.setItem("isAuthenticated", JSON.stringify(true))
       })
-      .addCase(registerUser.rejected, state => {
-        state.error = "Ошибка регистрации";
+      .addCase(registerUser.rejected, (state, action) => {
+        state.isAuthenticated = false
+        state.error = action.payload || "Ошибка регистрации"
       })
-      .addCase(logoutUser.fulfilled, state => {
-        state.user = null;
-        state.isAuthenticated = false;
-        state.error = null;
-        localStorage.removeItem("isAuthenticated");
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user = null
+        state.isAuthenticated = false
+        state.error = null
+        localStorage.removeItem("isAuthenticated")
       })
-      .addCase(
-        fetchCurrentUser.fulfilled,
-        (state, action: PayloadAction<User>) => {
-          state.user = action.payload;
-          state.isAuthenticated = true;
-          state.error = null;
-        },
-      )
-      .addCase(fetchCurrentUser.rejected, state => {
-        state.user = null;
-        state.isAuthenticated = false;
-        state.error = "Access to user denied";
-        localStorage.removeItem("isAuthenticated");
-      });
-  },
-});
+      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        state.user = action.payload
+        state.isAuthenticated = true
+        state.error = null
+      })
+      .addCase(fetchCurrentUser.rejected, (state) => {
+        state.user = null
+        state.isAuthenticated = false
+        state.error = "Access to user denied"
+        localStorage.removeItem("isAuthenticated")
+      })
+  }
+})
 
-export const { logout } = authSlice.actions;
-export default authSlice.reducer;
+export default authSlice.reducer

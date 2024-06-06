@@ -1,70 +1,96 @@
 .header {
-  background-color: #5788f5;
-  color: white;
-  padding: 10px 20px;
+    background-color: #5788f5;
+    width: 100%;
+    padding: 10px 20px;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 10;
 }
 
 .header-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
 }
 
-.brand a img {
-  height: 40px;
+.brand img {
+    height: 40px;
 }
 
 .nav {
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
 }
 
 .nav-list {
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 20px;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
 }
 
 .nav-list li {
-  position: relative;
+    position: relative;
 }
 
 .nav-list li a,
 .nav-list li button {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
 }
 
 .nav-button {
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 18px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
 }
 
 .cart-icon {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  position: relative;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    position: relative;
 }
 
 .cart-icon a {
-  color: white;
-  position: relative;
+    color: white;
+    position: relative;
 }
 
 .cart-count {
-  background: red;
-  color: white;
-  border-radius: 50%;
-  padding: 2px 8px;
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  font-size: 12px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 8px;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 12px;
+}
+ 
+
+@media (max-width: 1200px) {
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
 }

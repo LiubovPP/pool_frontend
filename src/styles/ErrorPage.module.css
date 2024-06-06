@@ -1,0 +1,10 @@
+* {
+    padding: 0;
+    margin: 0;
+
+}
+
+.eror_container {
+    margin-top: 250px;
+    z-index: -1;
+}

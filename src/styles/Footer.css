@@ -1,31 +1,31 @@
 .footer {
-  width: 100%;
-  background-color: #1f2e50;
-  padding: 20px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    background-color: #1f2e50;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .footer-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 80%;
-  max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    max-width: 1200px;
 }
 
 .brand img {
-  height: 50px;
+    height: 50px;
 }
 
 .social-icons a {
-  color: white;
-  font-size: 24px;
-  margin: 0 10px;
-  transition: color 0.3s;
+    color: white;
+    font-size: 24px;
+    margin: 0 10px;
+    transition: color 0.3s;
 }
 
 .social-icons a:hover {
-  color: #5788f5;
+    color: #5788f5;
 }

@@ -1,0 +1,21 @@
+ 
+ .img_text {
+    position: absolute;
+    top: 40%;
+    left: 15%;
+    color: white;
+    font-size: 20px;
+    text-align: left;
+}
+.container_cart {
+    float: left;
+    width: 500px;
+    height: 300px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.cart_1 {
+    float: right;
+    width: 500px; /* Регулируйте ширину по своему усмотрению */
+    height: 300px;
+    padding: 20px;
+  }

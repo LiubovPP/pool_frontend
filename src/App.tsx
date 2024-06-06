@@ -1,45 +1,61 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '@app/store';
-import Header from '@components/Header';
-import Footer from '@components/Footer';
-import Home from '@pages/Home';
-import Products from '@pages/Products';
-import Cart from '@pages/Cart';
-import Profile from '@pages/Profile';
-import AdminUsers from '@pages/AdminUsers';
-import AdminProducts from '@pages/AdminProducts';
-import OrdersPage from '@pages/Orders';
-import '@styles/App.css';
-import { useAppDispatch } from '@app/hooks';
-import { fetchCurrentUser } from '@app/slices/authSlice';
-import ErrorPage from '@pages/ErrorPage';
+import type React from "react";
+import { useEffect } from "react"
+import { Route, Routes } from "react-router-dom"
+import Header from "@components/Header"
+import Footer from "@components/Footer"
+import Home from "@pages/Home"
+import Products from "@pages/Products"
+import Cart from "@pages/Cart"
+import Profile from "@pages/Profile"
+import AdminUsers from "@pages/AdminUsers"
+import AdminProducts from "@pages/AdminProducts"
+import OrdersPage from "@pages/Orders"
+import HamamPage from "@pages/HamamPage"
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
+import { fetchCurrentUser } from "@app/slices/authSlice"
+import BackgroundImage from "@components/BackgroundImage"
+import "@styles/App.css"
+import ErrorPage from "@pages/ErrorPage"
+import Maintenance from "@pages/Maintenance"
+import Composite from "@pages/Composite"
+import Frame from "@pages/Frame"
+import Concrete from "@pages/Concrete"
+import Adjustable from "@pages/Adjustable"
+import SaunaPage from "@pages/SaunaPage";
 
 const App: React.FC = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth)
+  const dispatch = useAppDispatch()
 
-  const dispatch = useAppDispatch();
   useEffect(() => {
     if (isAuthenticated) {
-      dispatch(fetchCurrentUser());
+      dispatch(fetchCurrentUser())
     }
-  }, [isAuthenticated, dispatch]);
+  }, [isAuthenticated, dispatch])
 
   return (
     <div className="app">
       <Header />
+      <BackgroundImage />
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="*" element={<ErrorPage/>} />
+
           <Route path="/orders" element={<OrdersPage />} />
-          {user && user.role === 'ADMIN' && (
-            <>
+          <Route path="/hamamy" element={<HamamPage />} />
+          <Route path="/sauny" element={<SaunaPage />} />
+          <Route path="/maintanance" element={<Maintenance />} />
+          <Route path="/composite" element={<Composite />} />
+          <Route path="/frame" element={<Frame />} />
+          <Route path="/concrete" element={<Concrete />} />
+          <Route path="/adjustable" element={<Adjustable />} />
+          <Route path="*" element={<ErrorPage />} />
+          {user && user.role === "ADMIN" && (
+
+              <>
               <Route path="/admin/users" element={<AdminUsers />} />
               <Route path="/admin/products" element={<AdminProducts />} />
             </>
@@ -48,7 +64,7 @@ const App: React.FC = () => {
       </main>
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

@@ -1,35 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '@app/store';
-import { fetchUsers, deleteUser, updateUser } from '@app/slices/usersSlice';
-import { User } from '@app/types';
-import '@styles/Profile.css';
+import type React from "react"
+import { useState, useEffect } from "react"
+import type { RootState, AppDispatch } from "@app/store"
+import { fetchUsers, deleteUser, updateUser } from "@app/slices/usersSlice"
+import type { User } from "@app/types"
+import "@styles/Profile.css"
+import { useAppDispatch, useAppSelector } from "@app/hooks/hooks"
 
 const Profile: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const { user } = useSelector((state: RootState) => state.auth);
-  const { users, loading, error } = useSelector((state: RootState) => state.users);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const dispatch: AppDispatch = useAppDispatch()
+  const { user } = useAppSelector((state: RootState) => state.auth)
+  const { users, loading, error } = useAppSelector((state: RootState) => state.users)
+  const [editingUser, setEditingUser] = useState<User | null>(null)
 
   useEffect(() => {
-    if (user?.role === 'ADMIN') {
-      dispatch(fetchUsers());
+    if (user?.role === "ADMIN") {
+      dispatch(fetchUsers())
     }
-  }, [dispatch, user]);
+  }, [dispatch, user])
 
   const handleDeleteUser = (id: number) => {
-    dispatch(deleteUser(id));
-  };
+    dispatch(deleteUser(id))
+  }
 
   const handleUpdateUser = () => {
     if (editingUser) {
-      dispatch(updateUser(editingUser));
-      setEditingUser(null);
+      dispatch(updateUser(editingUser))
+      setEditingUser(null)
     }
-  };
-
+  }
   if (!user) {
-    return <p>Вы не авторизованы</p>;
+    return <p>Вы не авторизованы</p>
   }
 
   return (
@@ -40,7 +40,7 @@ const Profile: React.FC = () => {
       <p>Email: {user.email}</p>
       <p>Телефон: {user.phoneNumber}</p>
       <p>Роль: {user.role}</p>
-      {user.role === 'ADMIN' && (
+      {user.role === "ADMIN" && (
         <div>
           <h2>Пользователи</h2>
           {loading && <p>Загрузка...</p>}
@@ -85,7 +85,7 @@ const Profile: React.FC = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Profile;
+export default Profile
